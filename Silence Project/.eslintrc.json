@@ -1,0 +1,12 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "import/first": "error",
+    "import/no-duplicates": "error",
+    "import/no-unresolved": "error",
+    "import/no-unused-modules": "warn",
+    "no-unused-vars": ["warn", { "varsIgnorePattern": "^_" }]
+
+    // Adicione outras regras relevantes de acordo com suas necessidades
+  }
+}

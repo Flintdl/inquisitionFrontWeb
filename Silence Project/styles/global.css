@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply font-nunito;
+}
+
+#__next {
+  @apply h-full min-h-full;
+}
+
+@font-face {
+  font-family: "Kanit";
+  src: url("../assets/Kanit/Kanit-Light.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KanitRegular";
+  src: url("../assets/Kanit/Kanit-Regular.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KanitBold";
+  src: url("../assets/Kanit/Kanit-Bold.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AntonRegular";
+  src: url("../assets/Anton/Anton-Regular.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("../assets/Nunito/NunitoSans-Regular.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nunito Semi Bold";
+  src: url("../assets/Nunito/NunitoSans-SemiBold.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nunito Bold";
+  src: url("../assets/Nunito/NunitoSans-Bold.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nunito Extra Bold";
+  src: url("../assets/Nunito/NunitoSans-ExtraBold.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../assets/Poppins/Poppins-Regular.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins Bold";
+  src: url("../assets/Poppins/Poppins-Bold.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins Semi Bold";
+  src: url("../assets/Poppins/Poppins-SemiBold.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins Extra Bold";
+  src: url("../assets/Poppins/Poppins-ExtraBold.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins Bold Italic";
+  src: url("../assets/Poppins/Poppins-BoldItalic.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Spartan";
+  src: url("../assets/Spartan/LeagueSpartan-Regular.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Spartan Bold";
+  src: url("../assets/Spartan/LeagueSpartan-Bold.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Spartan Extra Bold";
+  src: url("../assets/Spartan/LeagueSpartan-ExtraBold.ttf");
+  font-display: swap;
+}
