@@ -11,17 +11,51 @@ function LobbyCreateMatch({ actions }) {
   const { setOpenCreateMatch } = actions;
 
   const { socket, setSocket } = useSocket();
+  const [turn, setTurn] = useState(false);
+  const [count, setCount] = useState(15);
 
   const [friends, setFriends] = useState([]);
 
   const [loadingFastMatch, setLoadingFastMatch] = useState(false);
   const [loadingFriendMatch, setLoadingFriendMatch] = useState(false);
 
+  const handleQuickMatch = () => {
+    socket.emit("join_room", "room1"); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
+    socket.emit("start_game");
+  };
+
   useEffect(() => {
     console.log(socket);
 
     socket.emit("request_users");
 
+    socket.on("room_users", (data) => {
+      console.log(data);
+      console.log("começou");
+    });
+    socket.on("insufficient_players", () => {
+      console.log("insufficient_players");
+    });
+
+    socket.on("your_turn", () => {
+      console.log("your_turn");
+      setTurn(true);
+    });
+    socket.on("turn_over", () => {
+      console.log("turn_over");
+      setTurn(false);
+    });
+    socket.on("turn_info", (data) => {
+      setCount(data.countdown);
+      const countdownInterval = setInterval(() => {
+        data.countdown--; // Decrementa o contador
+        setCount(data.countdown);
+
+        if (data.countdown <= 0) {
+          clearInterval(countdownInterval); // Limpa o intervalo quando o contador chega a 0
+        }
+      }, 1000);
+    });
     socket.on("result_users", (data) => {
       setFriends(data);
     });
@@ -32,7 +66,7 @@ function LobbyCreateMatch({ actions }) {
       <CustomDialog
         title={`${loadingFriendMatch ? "Selecione seus amigos" : "Criar Sala"}`}
         close={setOpenCreateMatch}
-        size="sm"
+        size="md"
       >
         <section>
           {!loadingFriendMatch ? (
@@ -43,6 +77,33 @@ function LobbyCreateMatch({ actions }) {
                 pos="left"
                 text="Você pode criar tanto uma partida com os amigos, quanto uma partida rápida, sem configurações, experimente e divirta-se da forma que você acha melhor!"
               />
+              {turn && (
+                <div className="mt-3 flex items-center rounded-md border-2 bg-cyan-500 p-2">
+                  <CustomTitles
+                    tag="p"
+                    size={18}
+                    pos="center"
+                    text="Sua vez"
+                    customClass="!text-red-500"
+                  />
+                  <CustomTitles
+                    tag="p"
+                    size={18}
+                    pos="center"
+                    text={count}
+                    customClass="!text-orange-500 !ml-2"
+                  />
+                </div>
+              )}
+              {!turn && (
+                <CustomTitles
+                  tag="p"
+                  size={18}
+                  pos="center"
+                  text={`Turno do usuário terminando em: ${count}`}
+                  customClass="!text-orange-500 !ml-2"
+                />
+              )}
               <div className="flex justify-between gap-2 pt-4">
                 <CustomButton
                   title="Jogar com amigos"
@@ -54,11 +115,23 @@ function LobbyCreateMatch({ actions }) {
                   }}
                 />
                 <CustomButton
+                  title="Criar sala"
+                  color="danger"
+                  outline={true}
+                  loading={loadingFriendMatch}
+                  // action={{
+                  //   onClick: () => setLoadingFriendMatch(!loadingFriendMatch),
+                  // }}
+                />
+                <CustomButton
                   title="Partida rápida"
                   color="primary"
                   loading={loadingFastMatch}
                   action={{
-                    onClick: () => setLoadingFastMatch(!loadingFastMatch),
+                    onClick: () => {
+                      setLoadingFastMatch(!loadingFastMatch);
+                      handleQuickMatch();
+                    },
                   }}
                 />
               </div>

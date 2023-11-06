@@ -28,6 +28,28 @@ const SocketHandler = (req, res) => {
         socket.emit("result_users", users);
       });
 
+      socket.on("join_room", (roomName) => {
+        socket.join(roomName);
+        socket.room = roomName;
+        console.log(`User ${socket.id} joined room: ${roomName}`);
+        io.to(roomName).emit(
+          "room_users",
+          io.sockets.adapter.rooms.get(roomName),
+        );
+      });
+
+      socket.on("start_game", () => {
+        const roomName = socket.room;
+        const room = io.sockets.adapter.rooms.get(roomName);
+
+        if (room && room.size >= 3) {
+          io.to(roomName).emit("game_started");
+          startGame(io, roomName);
+        } else {
+          io.to(roomName).emit("insufficient_players");
+        }
+      });
+
       socket.on("disconnect", () => {
         console.log("Usuário desconectado:", socket.id);
         users = users.filter((user) => user.id !== socket.id);
@@ -38,5 +60,68 @@ const SocketHandler = (req, res) => {
   }
   res.end();
 };
+
+const startGame = (io, roomName) => {
+  const room = io.sockets.adapter.rooms.get(roomName);
+  const users = Array.from(room);
+
+  if (users.length >= 3) {
+    let currentPlayerIndex = 0;
+    let countdownTimer;
+
+    countdownTimer = setInterval(() => {
+      const currentPlayerId = users[currentPlayerIndex];
+      io.to(currentPlayerId).emit("your_turn");
+      io.to(roomName).emit("turn_info", {
+        currentPlayer: currentPlayerId,
+        countdown: 15,
+      });
+
+      setTimeout(() => {
+        io.to(currentPlayerId).emit("turn_over");
+        currentPlayerIndex = (currentPlayerIndex + 1) % users.length;
+      }, 15000);
+    }, 16000); // Delay timer by 1 second to account for network latency
+  } else {
+    io.to(roomName).emit("insufficient_players");
+  }
+};
+
+// const startGame = (io, roomName) => {
+//   const room = io.sockets.adapter.rooms.get(roomName);
+//   const users = Array.from(room);
+
+//   if (users.length >= 3) {
+//     let currentPlayerIndex = 0;
+//     let countdownTimer;
+
+//     countdownTimer = setInterval(() => {
+//       const currentPlayerId = users[currentPlayerIndex];
+//       io.to(currentPlayerId).emit("your_turn");
+//       io.to(roomName).emit("turn_info", {
+//         currentPlayer: currentPlayerId,
+//         countdown: 15, // Defina o tempo inicial do contador
+//       });
+
+//       let countdown = 15; // Tempo inicial do contador
+//       const countdownInterval = setInterval(() => {
+//         countdown--; // Decrementa o contador
+//         io.to(roomName).emit("turn_info", {
+//           currentPlayer: currentPlayerId,
+//           countdown: countdown, // Envie o contador regressivamente aos clientes
+//         });
+
+//         if (countdown <= 0) {
+//           clearInterval(countdownInterval); // Limpa o intervalo quando o contador chega a 0
+//           io.to(currentPlayerId).emit("turn_over");
+//           currentPlayerIndex = (currentPlayerIndex + 1) % users.length;
+//           startGame(io, roomName); // Inicie o próximo turno
+//         }
+//       }, 1000); // Atualiza o contador a cada segundo
+//     }, 16000); // Delay timer by 1 second to account for network latency
+//   } else {
+//     io.to(roomName).emit("insufficient_players");
+//   }
+// };
 
 export default SocketHandler;
