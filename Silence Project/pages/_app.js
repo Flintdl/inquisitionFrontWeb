@@ -1,5 +1,6 @@
 import { SocketMessage } from "../contexts/MessageContex";
 import { SocketContext } from "../contexts/SocketContext";
+import { SoundAllowed } from "../contexts/SoundContext";
 import "../styles/global.css";
 
 function MyApp({ Component, pageProps }) {
@@ -7,7 +8,9 @@ function MyApp({ Component, pageProps }) {
     <>
       <SocketContext>
         <SocketMessage>
-          <Component {...pageProps} />
+          <SoundAllowed>
+            <Component {...pageProps} />
+          </SoundAllowed>
         </SocketMessage>
       </SocketContext>
     </>

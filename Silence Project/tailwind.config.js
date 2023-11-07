@@ -9,7 +9,15 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        lobby: "url('/images/background_initial_page.png')",
+        lobby: "url('/images/lobby_backgrounds/background_initial_page.png')",
+        lobby02:
+          "url('/images/lobby_backgrounds/background_initial_page_option_02.png')",
+        lobby03:
+          "url('/images/lobby_backgrounds/background_initial_page_option_03.png')",
+        lobby04:
+          "url('/images/lobby_backgrounds/background_initial_page_option_04.png')",
+        lobby05:
+          "url('/images/lobby_backgrounds/background_initial_page_option_05.png')",
       },
       fontSize: {
         "1xs": "0.75rem",

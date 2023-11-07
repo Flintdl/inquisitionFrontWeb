@@ -57,6 +57,7 @@ function ListServer({ actions }) {
             const { quantity, max, privateMatch } = match;
             return (
               <ServerList
+                key={i}
                 props={{ id, name, favorite, quantity, max, privateMatch }}
               />
             );

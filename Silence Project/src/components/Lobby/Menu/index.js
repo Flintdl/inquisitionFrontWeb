@@ -11,11 +11,15 @@ import {
   Plus,
   Question,
   SketchLogo,
+  SpeakerHigh,
+  SpeakerSlash,
   Users,
 } from "@phosphor-icons/react";
 import { useState } from "react";
 
-function MenuLobby() {
+function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
+  const { themeMusicLobbyPaused, setThemeMusicLobbyPaused } = lobbyThemeMusic;
+
   const [coins, setCoins] = useState(210);
   const [diamonds, setDiamonds] = useState(15);
   const [xp, setXp] = useState(50);
@@ -26,7 +30,7 @@ function MenuLobby() {
     <header className="select-none">
       <nav className="flex items-center justify-between">
         <div>
-          <h1 className="font-AntonRegular bold bg-gradient-to-r from-gray-700 via-red-600 to-green-600 bg-clip-text pr-2 text-2xl text-transparent">
+          <h1 className="bold bg-gradient-to-r from-gray-700 via-red-600 to-green-600 bg-clip-text pr-2 font-AntonRegular text-2xl text-transparent">
             SilenceKillers
           </h1>
         </div>
@@ -50,13 +54,13 @@ function MenuLobby() {
             <li>
               <div className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-green-500 hover:opacity-80">
                 <Users weight="duotone" size={32} />
-                <p className="font-AntonRegular hidden lg:block">Amigos</p>
+                <p className="hidden font-AntonRegular lg:block">Amigos</p>
               </div>
             </li>
             <li>
               <div className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-orange-400 hover:opacity-80">
                 <Gear weight="duotone" size={32} />
-                <p className="font-AntonRegular hidden lg:block">
+                <p className="hidden font-AntonRegular lg:block">
                   Configurações
                 </p>
               </div>
@@ -64,25 +68,82 @@ function MenuLobby() {
             <li>
               <div className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-cyan-400 hover:opacity-80">
                 <Question weight="duotone" size={32} />
-                <p className="font-AntonRegular hidden lg:block">Ajuda</p>
+                <p className="hidden font-AntonRegular lg:block">Ajuda</p>
               </div>
             </li>
             <li>
               <div className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80">
                 <Note weight="duotone" size={32} />
-                <p className="font-AntonRegular hidden lg:block">Novidades</p>
+                <p className="hidden font-AntonRegular lg:block">Novidades</p>
               </div>
             </li>
-            <li onClick={() => setBoosted(!boosted)}>
+            <li className="flex items-center">
+              <div
+                onClick={() => setBgLobby("bg-lobby")}
+                className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80"
+              >
+                <p className="hidden font-AntonRegular lg:block">01</p>
+              </div>
+            </li>
+            <li className="flex items-center">
+              <div
+                onClick={() => setBgLobby("bg-lobby02")}
+                className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80"
+              >
+                <p className="hidden font-AntonRegular lg:block">02</p>
+              </div>
+            </li>
+            <li className="flex items-center">
+              <div
+                onClick={() => setBgLobby("bg-lobby03")}
+                className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80"
+              >
+                <p className="hidden font-AntonRegular lg:block">03</p>
+              </div>
+            </li>
+            <li className="flex items-center">
+              <div
+                onClick={() => setBgLobby("bg-lobby04")}
+                className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80"
+              >
+                <p className="hidden font-AntonRegular lg:block">04</p>
+              </div>
+            </li>
+            <li className="flex items-center">
+              <div
+                onClick={() => setBgLobby("bg-lobby05")}
+                className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80"
+              >
+                <p className="hidden font-AntonRegular lg:block">05</p>
+              </div>
+            </li>
+            {/* <li onClick={() => setBoosted(!boosted)}>
               <div className="flex cursor-pointer items-center gap-2 text-purple-400 hover:opacity-80">
                 <CursorClick weight="duotone" size={32} />
                 <p className="font-AntonRegular">
                   {boosted ? "Free" : "Boosted"}
                 </p>
               </div>
-            </li>
+            </li> */}
           </ul>
-
+          <div className="absolute left-4 top-full mt-2 flex items-center gap-4 rounded-full p-2 text-white">
+            {themeMusicLobbyPaused && (
+              <SpeakerHigh
+                onClick={() => setThemeMusicLobbyPaused(false)}
+                size={32}
+                className="cursor-pointer rounded-md border border-cyan-500/50 bg-cyan-500/30 p-1 text-cyan-200 hover:opacity-70"
+                weight="fill"
+              />
+            )}
+            {!themeMusicLobbyPaused && (
+              <SpeakerSlash
+                onClick={() => setThemeMusicLobbyPaused(true)}
+                size={32}
+                className="cursor-pointer rounded-md border border-cyan-500/50 bg-cyan-500/30 p-1 text-cyan-200 hover:opacity-70"
+                weight="fill"
+              />
+            )}
+          </div>
           <div
             className={`absolute right-4 top-full mt-4 flex items-center gap-4 rounded-full p-2 ${
               boosted
