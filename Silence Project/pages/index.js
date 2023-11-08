@@ -24,6 +24,9 @@ export default function HomePage() {
 
   const [loading, setLoading] = useState(true);
 
+  const [messagesRoom, setMessagesRoom] = useState([]);
+  const [messageInput, setMessageInput] = useState("");
+
   const [rooms, setRooms] = useState([]);
   const [roomActive, setRoomActive] = useState(null);
   const [usersRoom, setUsersRoom] = useState([]);
@@ -72,6 +75,25 @@ export default function HomePage() {
         setUsersRoom(data.users);
         console.log(data.users);
       });
+
+      sk.on("room_users_teste", (data) => {
+        alert(data.message);
+      });
+
+      sk.on("received_message", (data) => {
+        setMessagesRoom((prevState) => [
+          ...prevState,
+          { id: data.id, message: data.message },
+        ]);
+      });
+    });
+  };
+
+  const sendMessage = () => {
+    socket.emit("write_message", {
+      roomName: roomActive,
+      id: socket.id,
+      messageInput,
     });
   };
 
@@ -178,7 +200,10 @@ export default function HomePage() {
             <nav className="flex w-full items-center gap-2 rounded-md bg-black p-1">
               <div
                 className="flex w-fit cursor-pointer items-center gap-1 transition-all hover:gap-2"
-                onClick={() => setRoomActive(null)}
+                onClick={() => {
+                  socket.emit("leave_room", roomActive);
+                  setRoomActive(null);
+                }}
               >
                 <ArrowFatLeft
                   weight="duotone"
@@ -191,6 +216,20 @@ export default function HomePage() {
                   pos="left"
                   text="Sair da Sala"
                   customClass="!text-cyan-500"
+                />
+              </div>
+              <div
+                className="flex w-fit cursor-pointer items-center gap-1 transition-all hover:gap-2"
+                onClick={() => {
+                  socket.emit("teste_sala", roomActive);
+                }}
+              >
+                <CustomTitles
+                  tag="h5"
+                  size={14}
+                  pos="left"
+                  text="Sinal to na sala"
+                  customClass="!text-red-500"
                 />
               </div>
             </nav>
@@ -217,8 +256,25 @@ export default function HomePage() {
                   );
                 })}
               </ul>
-              <div className="h-full w-full rounded-md bg-slate-900 p-4 font-Kanit text-white">
-                a
+              <div className="flex h-full w-full flex-col rounded-md bg-slate-900 p-4 font-Kanit text-white">
+                <ul className="flex flex-col">
+                  {messagesRoom?.map(({ id, message }) => {
+                    return (
+                      <li key={id}>
+                        <p>Usuário: {id}</p>
+                        <p>{message}</p>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <div className="mt-auto flex gap-4">
+                  <input
+                    value={messageInput}
+                    className="text-black"
+                    onChange={(e) => setMessageInput(e.target.value)}
+                  />
+                  <button onClick={() => sendMessage()}>mandar</button>
+                </div>
               </div>
             </section>
           </CustomDialog>

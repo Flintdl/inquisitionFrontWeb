@@ -29,6 +29,13 @@ const SocketHandler = (req, res) => {
         socket.emit("result_users", users);
       });
 
+      socket.on("write_message", (data) => {
+        io.to(data.roomName).emit("received_message", {
+          id: data.id,
+          message: data.messageInput,
+        });
+      });
+
       socket.on("create_room", (roomName) => {
         socket.join(roomName);
         socket.room = roomName;
@@ -48,7 +55,6 @@ const SocketHandler = (req, res) => {
       });
 
       socket.on("join_room", (roomName) => {
-        const users = [];
         socket.join(roomName);
         socket.room = roomName;
         console.log(`User ${socket.id} joined room: ${roomName}`);
@@ -72,6 +78,34 @@ const SocketHandler = (req, res) => {
         io.to(roomName).emit("room_users", {
           adapter: io.sockets.adapter.rooms.get(roomName),
           users: existingRoom ? existingRoom.users : [],
+        });
+      });
+
+      socket.on("leave_room", (roomName) => {
+        socket.leave(roomName);
+        console.log(`User ${socket.id} leave room: ${roomName}`);
+        // Procurar a sala com base no roomName
+        const existingRoom = usersRoom.find((room) => room.roomID === roomName);
+
+        if (existingRoom) {
+          // Se a sala já existe, adicione o usuário a essa sala
+          existingRoom.users = existingRoom.users.filter(
+            (user) => user.id !== socket.id,
+          );
+        }
+
+        console.log(usersRoom);
+        console.log("roomName: ", roomName);
+        console.log(existingRoom);
+        io.to(roomName).emit("room_users", {
+          adapter: io.sockets.adapter.rooms.get(roomName),
+          users: existingRoom ? existingRoom.users : [],
+        });
+      });
+
+      socket.on("teste_sala", (roomName) => {
+        io.to(roomName).emit("room_users_teste", {
+          message: "Olá, você ainda está na sala!",
         });
       });
 

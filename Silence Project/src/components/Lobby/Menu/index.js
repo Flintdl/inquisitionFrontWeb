@@ -17,6 +17,10 @@ import {
 } from "@phosphor-icons/react";
 import { useState } from "react";
 
+import profileImage from "../../../../public/images/miniature-1-1-mage-profile.png";
+import Image from "next/image";
+import CustomTitles from "../../_Global/Commons/Titles";
+
 function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
   const { themeMusicLobbyPaused, setThemeMusicLobbyPaused } = lobbyThemeMusic;
 
@@ -35,7 +39,7 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
           </h1>
         </div>
         <div className="relative">
-          <ul className="flex w-fit gap-6 rounded-3xl border border-white/10 bg-gray-600/90 px-3 py-1">
+          <ul className="flex w-fit gap-6 rounded-lg  border-white/10 bg-gradient-to-r from-gray-400/10 via-zinc-600 to-cyan-700 px-3 py-1">
             <li className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-yellow-500">
                 <Coins weight="duotone" size={32} />
@@ -117,53 +121,68 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
                 <p className="hidden font-AntonRegular lg:block">05</p>
               </div>
             </li>
-            {/* <li onClick={() => setBoosted(!boosted)}>
-              <div className="flex cursor-pointer items-center gap-2 text-purple-400 hover:opacity-80">
-                <CursorClick weight="duotone" size={32} />
+            <li
+              onClick={() => setBoosted(!boosted)}
+              className="flex items-center"
+            >
+              <div className="flex cursor-pointer items-center text-purple-400 hover:opacity-80">
                 <p className="font-AntonRegular">
                   {boosted ? "Free" : "Boosted"}
                 </p>
               </div>
-            </li> */}
+            </li>
           </ul>
           <div className="absolute left-4 top-full mt-2 flex items-center gap-4 rounded-full p-2 text-white">
-            {themeMusicLobbyPaused && (
-              <SpeakerHigh
-                onClick={() => setThemeMusicLobbyPaused(false)}
-                size={32}
-                className="cursor-pointer rounded-md border border-cyan-500/50 bg-cyan-500/30 p-1 text-cyan-200 hover:opacity-70"
-                weight="fill"
+            <div
+              onClick={() => setThemeMusicLobbyPaused(!themeMusicLobbyPaused)}
+              className="flex cursor-pointer items-center gap-2 rounded-md border border-cyan-500/50 bg-cyan-500/30 py-1 pl-1 pr-2 text-cyan-200 hover:opacity-70"
+            >
+              {themeMusicLobbyPaused && (
+                <SpeakerHigh
+                  size={24}
+                  // className="cursor-pointer rounded-md border border-cyan-500/50 bg-cyan-500/30 p-1 text-cyan-200 hover:opacity-70"
+                  weight="fill"
+                />
+              )}
+              {!themeMusicLobbyPaused && (
+                <SpeakerSlash size={24} weight="fill" />
+              )}
+              <CustomTitles
+                tag="p"
+                size={12}
+                pos="left"
+                text="The sound of glory - Flint"
+                customClass="!text-cyan-400 font-KanitBold"
               />
-            )}
-            {!themeMusicLobbyPaused && (
-              <SpeakerSlash
-                onClick={() => setThemeMusicLobbyPaused(true)}
-                size={32}
-                className="cursor-pointer rounded-md border border-cyan-500/50 bg-cyan-500/30 p-1 text-cyan-200 hover:opacity-70"
-                weight="fill"
-              />
-            )}
+            </div>
           </div>
           <div
-            className={`absolute right-4 top-full mt-4 flex items-center gap-4 rounded-full p-2 ${
+            className={`absolute right-0 top-full mt-4 flex items-center gap-4 rounded-md p-2 ${
               boosted
-                ? "animate-bgBoosted bg-gradient-to-r from-cyan-500 via-indigo-500 to-orange-500"
+                ? "animate-bgBoosted bg-gradient-to-r from-cyan-500/70 via-indigo-500/70 to-orange-500/70"
                 : "border border-white/10 bg-gray-600/90"
             }`}
           >
             <div>
-              <div className="flex w-fit items-center justify-center rounded-full border-2 border-white bg-cyan-600 p-2">
-                <Cat size={20} weight="fill" className="text-gray-100" />
+              <div className="flex w-fit items-center justify-center overflow-hidden rounded-md border-2 border-white/30 bg-cyan-600 shadow-md">
+                {/* <Cat size={24} weight="fill" className="text-gray-100" /> */}
+                <Image src={profileImage} width={44} height={44} />
               </div>
             </div>
             <div className="flex w-32 flex-col gap-1">
-              <p className="font-AntonRegular text-gray-300">Flintovsk</p>
-              <div className="relative w-full overflow-hidden rounded-full border bg-gray-300">
+              <p className="left-3 font-KanitRegular text-gray-300">
+                Flintovsk
+              </p>
+              <div className="relative w-full overflow-hidden rounded-md border bg-gray-300">
                 <p
-                  className="flex h-3 w-full items-center justify-center rounded-full bg-cyan-600 text-xs"
+                  className={`flex h-3 w-full items-center justify-center rounded-sm text-xs ${
+                    boosted
+                      ? "bg-gradient-to-r from-cyan-500 via-indigo-500 to-orange-500"
+                      : "bg-gradient-to-r from-cyan-500 to-green-500"
+                  }`}
                   style={{ width: `${xp}%` }}
                 ></p>
-                <span className="absolute -top-[.10rem] left-[50%] block w-fit -translate-x-[50%] font-nunito_bold text-[0.65rem]">
+                <span className="absolute -top-[.10rem] left-[50%] block w-fit -translate-x-[50%] font-KanitBold text-[0.65rem]">
                   {xp}/100
                 </span>
               </div>
@@ -177,9 +196,7 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
                     className="rounded-lg bg-indigo-500 p-1 text-white"
                     size={18}
                   />
-                  <p className="font-AntonRegular text-xs text-white">
-                    Boosted
-                  </p>
+                  <p className="font-AntonRegular text-xs text-white ">2x</p>
                 </div>
               )}
             </div>
