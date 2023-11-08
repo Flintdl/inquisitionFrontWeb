@@ -7,10 +7,18 @@ import { useSocket } from "../../../../contexts/SocketContext";
 import { useMessage } from "../../../../contexts/MessageContex";
 import MessageContainer from "../../_Global/Messages";
 
-function LobbyCreateMatch({ actions }) {
+function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
   const { setOpenCreateMatch } = actions;
+  const {
+    rooms,
+    setRooms,
+    roomActive,
+    setRoomActive,
+    usersRoom,
+    setUsersRoom,
+  } = roomsList;
 
-  const { socket, setSocket } = useSocket();
+  const { socket } = useSocket();
   const [turn, setTurn] = useState(false);
   const [count, setCount] = useState(15);
 
@@ -20,8 +28,11 @@ function LobbyCreateMatch({ actions }) {
   const [loadingFriendMatch, setLoadingFriendMatch] = useState(false);
 
   const handleQuickMatch = () => {
-    socket.emit("join_room", "room1"); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
-    socket.emit("start_game");
+    const idM = Math.random().toString(36).substr(2, 9);
+    setRooms((prevState) => [...prevState, { roomID: idM }]);
+    socket.emit("join_room", idM); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
+    setRoomActive(idM);
+    // socket.emit("start_game");
   };
 
   useEffect(() => {
@@ -30,7 +41,7 @@ function LobbyCreateMatch({ actions }) {
     socket.emit("request_users");
 
     socket.on("room_users", (data) => {
-      console.log(data);
+      setUsersRoom(data.users);
       console.log("começou");
     });
     socket.on("insufficient_players", () => {
@@ -63,21 +74,27 @@ function LobbyCreateMatch({ actions }) {
 
   return (
     <>
-      <CustomDialog
-        title={`${loadingFriendMatch ? "Selecione seus amigos" : "Criar Sala"}`}
-        close={setOpenCreateMatch}
-        size="md"
-      >
-        <section>
-          {!loadingFriendMatch ? (
-            <>
-              <CustomTitles
-                tag="h5"
-                size={12}
-                pos="left"
-                text="Você pode criar tanto uma partida com os amigos, quanto uma partida rápida, sem configurações, experimente e divirta-se da forma que você acha melhor!"
-              />
-              {turn && (
+      {!roomActive && (
+        <CustomDialog
+          title={`${
+            loadingFriendMatch ? "Selecione seus amigos" : "Criar Sala"
+          }`}
+          close={setOpenCreateMatch}
+          size="md"
+          soundAllowed={soundAllowed}
+        >
+          <section>
+            {!loadingFriendMatch ? (
+              <>
+                <CustomTitles
+                  tag="h5"
+                  size={12}
+                  pos="left"
+                  text="Você pode criar tanto uma partida com os amigos, quanto uma partida rápida, sem configurações, experimente e divirta-se da forma que você acha melhor!"
+                />
+                Rooms: {JSON.stringify(rooms)} <br />
+                Ativo: {JSON.stringify(roomActive)}
+                {/* {turn && (
                 <div className="mt-3 flex items-center rounded-md border-2 bg-cyan-500 p-2">
                   <CustomTitles
                     tag="p"
@@ -103,96 +120,97 @@ function LobbyCreateMatch({ actions }) {
                   text={`Turno do usuário terminando em: ${count}`}
                   customClass="!text-orange-500 !ml-2"
                 />
-              )}
-              <div className="flex justify-between gap-2 pt-4">
-                <CustomButton
-                  title="Jogar com amigos"
-                  color="secondary"
-                  outline={true}
-                  loading={loadingFriendMatch}
-                  action={{
-                    onClick: () => setLoadingFriendMatch(!loadingFriendMatch),
-                  }}
+              )} */}
+                <div className="flex justify-between gap-2 pt-4">
+                  <CustomButton
+                    title="Jogar com amigos"
+                    color="secondary"
+                    outline={true}
+                    loading={loadingFriendMatch}
+                    action={{
+                      onClick: () => setLoadingFriendMatch(!loadingFriendMatch),
+                    }}
+                  />
+                  <CustomButton
+                    title="Criar sala"
+                    color="danger"
+                    outline={true}
+                    loading={loadingFriendMatch}
+                    // action={{
+                    //   onClick: () => setLoadingFriendMatch(!loadingFriendMatch),
+                    // }}
+                  />
+                  <CustomButton
+                    title="Partida rápida"
+                    color="primary"
+                    // loading={loadingFastMatch}
+                    action={{
+                      onClick: () => {
+                        setLoadingFastMatch(!loadingFastMatch);
+                        handleQuickMatch();
+                      },
+                    }}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <CustomTitles
+                  tag="h5"
+                  size={14}
+                  pos="left"
+                  text="Aqui você encontra seus amigos, clique neles para selecionar e dê pronto para iniciar a partida com o convite."
+                  customClass="text-black font-KanitRegular"
                 />
-                <CustomButton
-                  title="Criar sala"
-                  color="danger"
-                  outline={true}
-                  loading={loadingFriendMatch}
-                  // action={{
-                  //   onClick: () => setLoadingFriendMatch(!loadingFriendMatch),
-                  // }}
+                <ul className="flex flex-col gap-2 py-2">
+                  {friends?.map(({ id }, i) => {
+                    return (
+                      <li
+                        key={id}
+                        className="flex items-center justify-between gap-2 rounded-md bg-white/40 p-2"
+                      >
+                        <CustomTitles
+                          tag="p"
+                          size={14}
+                          pos="left"
+                          text={`#${i}`}
+                          customClass="font-KanitBold !text-slate-700"
+                        />
+                        <CustomTitles
+                          tag="p"
+                          size={14}
+                          pos="left"
+                          text={id}
+                          customClass="font-KanitBold !text-black"
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
+            )}
+            {loadingFriendMatch && (
+              <div
+                className="flex w-fit cursor-pointer items-center gap-1 transition-all hover:gap-2"
+                onClick={() => setLoadingFriendMatch(false)}
+              >
+                <ArrowFatLeft
+                  weight="duotone"
+                  size={24}
+                  className="text-cyan-500"
                 />
-                <CustomButton
-                  title="Partida rápida"
-                  color="primary"
-                  loading={loadingFastMatch}
-                  action={{
-                    onClick: () => {
-                      setLoadingFastMatch(!loadingFastMatch);
-                      handleQuickMatch();
-                    },
-                  }}
+                <CustomTitles
+                  tag="h5"
+                  size={14}
+                  pos="left"
+                  text="Retornar"
+                  customClass="!text-cyan-500"
                 />
               </div>
-            </>
-          ) : (
-            <>
-              <CustomTitles
-                tag="h5"
-                size={14}
-                pos="left"
-                text="Aqui você encontra seus amigos, clique neles para selecionar e dê pronto para iniciar a partida com o convite."
-                customClass="text-black font-KanitRegular"
-              />
-              <ul className="flex flex-col gap-2 py-2">
-                {friends?.map(({ id }, i) => {
-                  return (
-                    <li
-                      key={id}
-                      className="flex items-center justify-between gap-2 rounded-md bg-white/40 p-2"
-                    >
-                      <CustomTitles
-                        tag="p"
-                        size={14}
-                        pos="left"
-                        text={`#${i}`}
-                        customClass="font-KanitBold !text-slate-700"
-                      />
-                      <CustomTitles
-                        tag="p"
-                        size={14}
-                        pos="left"
-                        text={id}
-                        customClass="font-KanitBold !text-black"
-                      />
-                    </li>
-                  );
-                })}
-              </ul>
-            </>
-          )}
-          {loadingFriendMatch && (
-            <div
-              className="flex w-fit cursor-pointer items-center gap-1 transition-all hover:gap-2"
-              onClick={() => setLoadingFriendMatch(false)}
-            >
-              <ArrowFatLeft
-                weight="duotone"
-                size={24}
-                className="text-cyan-500"
-              />
-              <CustomTitles
-                tag="h5"
-                size={14}
-                pos="left"
-                text="Retornar"
-                customClass="!text-cyan-500"
-              />
-            </div>
-          )}
-        </section>
-      </CustomDialog>
+            )}
+          </section>
+        </CustomDialog>
+      )}
     </>
   );
 }

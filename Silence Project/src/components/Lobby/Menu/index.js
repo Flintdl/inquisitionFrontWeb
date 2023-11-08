@@ -79,7 +79,7 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
             </li>
             <li className="flex items-center">
               <div
-                onClick={() => setBgLobby("bg-lobby")}
+                onClick={() => setBgLobby(1)}
                 className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80"
               >
                 <p className="hidden font-AntonRegular lg:block">01</p>
@@ -87,7 +87,7 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
             </li>
             <li className="flex items-center">
               <div
-                onClick={() => setBgLobby("bg-lobby02")}
+                onClick={() => setBgLobby(2)}
                 className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80"
               >
                 <p className="hidden font-AntonRegular lg:block">02</p>
@@ -95,7 +95,7 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
             </li>
             <li className="flex items-center">
               <div
-                onClick={() => setBgLobby("bg-lobby03")}
+                onClick={() => setBgLobby(3)}
                 className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80"
               >
                 <p className="hidden font-AntonRegular lg:block">03</p>
@@ -103,7 +103,7 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
             </li>
             <li className="flex items-center">
               <div
-                onClick={() => setBgLobby("bg-lobby04")}
+                onClick={() => setBgLobby(4)}
                 className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80"
               >
                 <p className="hidden font-AntonRegular lg:block">04</p>
@@ -111,7 +111,7 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
             </li>
             <li className="flex items-center">
               <div
-                onClick={() => setBgLobby("bg-lobby05")}
+                onClick={() => setBgLobby(5)}
                 className="flex cursor-pointer items-center gap-2 text-gray-300 hover:text-yellow-400 hover:opacity-80"
               >
                 <p className="hidden font-AntonRegular lg:block">05</p>

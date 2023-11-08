@@ -29,13 +29,16 @@ const SocketHandler = (req, res) => {
       });
 
       socket.on("join_room", (roomName) => {
+        const users = [];
         socket.join(roomName);
         socket.room = roomName;
         console.log(`User ${socket.id} joined room: ${roomName}`);
-        io.to(roomName).emit(
-          "room_users",
-          io.sockets.adapter.rooms.get(roomName),
-        );
+        users.push({ id: socket.id });
+        io.to(roomName).emit("room_users", {
+          adapter: io.sockets.adapter.rooms.get(roomName),
+          users,
+        });
+        socket.broadcast.emit("new_room", { roomName });
       });
 
       socket.on("start_game", () => {

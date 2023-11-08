@@ -145,6 +145,7 @@ function MiddleLobby({ actions, permissions }) {
             src={characterTest}
             title="Character Test"
             alt="Character Test"
+            sizes="(max-width: 768px) 100vw, 33vw"
             fill={true}
             priority={true}
             className="mt-6 block h-auto w-fit select-none !object-contain xl:!object-cover"
