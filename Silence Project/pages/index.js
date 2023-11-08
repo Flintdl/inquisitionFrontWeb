@@ -67,6 +67,11 @@ export default function HomePage() {
         setRooms((prevState) => [...prevState, { roomID: data.roomName }]);
         console.log("novo server");
       });
+
+      sk.on("room_users", (data) => {
+        setUsersRoom(data.users);
+        console.log(data.users);
+      });
     });
   };
 

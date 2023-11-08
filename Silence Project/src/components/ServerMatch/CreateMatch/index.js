@@ -30,7 +30,7 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
   const handleQuickMatch = () => {
     const idM = Math.random().toString(36).substr(2, 9);
     setRooms((prevState) => [...prevState, { roomID: idM }]);
-    socket.emit("join_room", idM); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
+    socket.emit("create_room", idM); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
     setRoomActive(idM);
     // socket.emit("start_game");
   };
@@ -42,7 +42,7 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
 
     socket.on("room_users", (data) => {
       setUsersRoom(data.users);
-      console.log("começou");
+      console.log(data.users);
     });
     socket.on("insufficient_players", () => {
       console.log("insufficient_players");

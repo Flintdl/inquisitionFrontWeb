@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 
 var users = [];
+var usersRoom = [];
 
 const SocketHandler = (req, res) => {
   if (res.socket.server.io) {
@@ -28,17 +29,50 @@ const SocketHandler = (req, res) => {
         socket.emit("result_users", users);
       });
 
+      socket.on("create_room", (roomName) => {
+        socket.join(roomName);
+        socket.room = roomName;
+        console.log(`User ${socket.id} create room: ${roomName}`);
+
+        // Se a sala não existe, crie uma nova sala
+        usersRoom.push({
+          roomID: roomName,
+          users: [{ id: socket.id }],
+        });
+
+        io.to(roomName).emit("room_users", {
+          adapter: io.sockets.adapter.rooms.get(roomName),
+          users: [{ id: socket.id }],
+        });
+        socket.broadcast.emit("new_room", { roomName });
+      });
+
       socket.on("join_room", (roomName) => {
         const users = [];
         socket.join(roomName);
         socket.room = roomName;
         console.log(`User ${socket.id} joined room: ${roomName}`);
-        users.push({ id: socket.id });
+        // Procurar a sala com base no roomName
+        const existingRoom = usersRoom.find((room) => room.roomID === roomName);
+
+        if (existingRoom) {
+          // Se a sala já existe, adicione o usuário a essa sala
+          existingRoom.users.push({ id: socket.id });
+        } else {
+          // Se a sala não existe, crie uma nova sala
+          usersRoom.push({
+            roomID: roomName,
+            users: [{ id: socket.id }],
+          });
+        }
+
+        console.log(usersRoom);
+        console.log("roomName: ", roomName);
+        console.log(existingRoom);
         io.to(roomName).emit("room_users", {
           adapter: io.sockets.adapter.rooms.get(roomName),
-          users,
+          users: existingRoom ? existingRoom.users : [],
         });
-        socket.broadcast.emit("new_room", { roomName });
       });
 
       socket.on("start_game", () => {
