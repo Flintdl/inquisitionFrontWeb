@@ -29,12 +29,12 @@ function ContentLobby({ children, bgLobby = 1 }) {
         <Image
           src={selectBg()}
           title="Character Test"
-          alt="Character Test"
+          alt={`Character Test ${bgLobby}`}
           fill={true}
           priority={true}
           className="block h-auto w-full select-none !object-cover"
         />
-        <div className="h-full w-full bg-gradient-to-r from-black via-black to-black/10 opacity-80"></div>
+        <div className="h-full w-full bg-gradient-to-r from-black via-black/60 to-black/10 opacity-80"></div>
       </div>
       {Array.isArray(children)
         ? children.map((child) => {

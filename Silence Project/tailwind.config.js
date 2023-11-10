@@ -6,6 +6,7 @@ module.exports = {
     "./src/utils/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: "class",
+  plugins: [require("tailwind-scrollbar")],
   theme: {
     extend: {
       backgroundImage: {

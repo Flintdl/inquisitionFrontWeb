@@ -1,6 +1,5 @@
 import Image from "next/image";
-import characterTest from "../../../../public/images/character_mage_01.png";
-import { ArrowBendDownLeft, ArrowBendDownRight } from "@phosphor-icons/react";
+import characterTest from "../../../../public/images/character_vampire_01.png";
 import { useEffect, useRef, useState } from "react";
 
 function MiddleLobby({ actions, permissions }) {
@@ -134,21 +133,20 @@ function MiddleLobby({ actions, permissions }) {
             transform: `rotateY(${rotationAngle}deg)`,
             transformStyle: "preserve-3d",
           }}
-          className="relative  flex h-full w-full max-w-[500px] overflow-hidden"
+          className="relative flex h-full w-full max-w-[400px] overflow-hidden py-4"
         >
-          <div className="absolute left-[50%] top-0 z-10 -translate-x-[50%] font-AntonRegular text-xl text-white">
+          {/* <div className="absolute -top-4 left-[50%] z-10 -translate-x-[50%] font-AntonRegular text-xl text-white">
             Flintovsk
-          </div>
+          </div> */}
           <div className="absolute z-10 h-full w-full"></div>
 
           <Image
             src={characterTest}
             title="Character Test"
             alt="Character Test"
-            sizes="(max-width: 768px) 100vw, 33vw"
             fill={true}
             priority={true}
-            className="mt-6 block h-auto w-fit select-none !object-contain xl:!object-cover"
+            className="block h-auto w-fit select-none !object-contain xl:!object-cover"
           />
         </div>
         {/* <div className="absolute bottom-80 mt-auto flex h-12 w-full items-center justify-center gap-96">

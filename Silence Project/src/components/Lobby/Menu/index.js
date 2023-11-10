@@ -20,9 +20,12 @@ import { useState } from "react";
 import profileImage from "../../../../public/images/miniature-1-1-mage-profile.png";
 import Image from "next/image";
 import CustomTitles from "../../_Global/Commons/Titles";
+import LobbyThemeMusic from "../Sound/theme";
 
-function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
-  const { themeMusicLobbyPaused, setThemeMusicLobbyPaused } = lobbyThemeMusic;
+function MenuLobby({ setBgLobby, soundAllowed }) {
+  const [themeMusicLobby, setThemeMusicLobby] = useState(null);
+  const [themeMusicLobbyPaused, setThemeMusicLobbyPaused] = useState(true);
+  const [themeActually, setThemeActually] = useState("");
 
   const [coins, setCoins] = useState(210);
   const [diamonds, setDiamonds] = useState(15);
@@ -34,7 +37,7 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
     <header className="select-none">
       <nav className="flex items-center justify-between">
         <div>
-          <h1 className="bold bg-gradient-to-r from-gray-700 via-red-600 to-green-600 bg-clip-text pr-2 font-AntonRegular text-2xl text-transparent">
+          <h1 className="bold bg-gradient-to-r from-gray-700 via-red-600 to-green-600 bg-clip-text pr-2 font-AntonRegular text-2xl uppercase text-transparent">
             SilenceKillers
           </h1>
         </div>
@@ -133,26 +136,26 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
             </li>
           </ul>
           <div className="absolute left-4 top-full mt-2 flex items-center gap-4 rounded-full p-2 text-white">
-            <div
-              onClick={() => setThemeMusicLobbyPaused(!themeMusicLobbyPaused)}
-              className="flex cursor-pointer items-center gap-2 rounded-md border border-cyan-500/50 bg-cyan-500/30 py-1 pl-1 pr-2 text-cyan-200 hover:opacity-70"
-            >
-              {themeMusicLobbyPaused && (
-                <SpeakerHigh
-                  size={24}
-                  // className="cursor-pointer rounded-md border border-cyan-500/50 bg-cyan-500/30 p-1 text-cyan-200 hover:opacity-70"
-                  weight="fill"
-                />
-              )}
-              {!themeMusicLobbyPaused && (
-                <SpeakerSlash size={24} weight="fill" />
-              )}
-              <CustomTitles
-                tag="p"
-                size={12}
-                pos="left"
-                text="The sound of glory - Flint"
-                customClass="!text-cyan-400 font-KanitBold"
+            <div className="flex items-center gap-2 rounded-md border border-cyan-500/50 bg-cyan-500/30 py-1 pl-1 pr-2 text-cyan-200 hover:opacity-70">
+              <LobbyThemeMusic
+                props={{
+                  soundAllowed,
+                  themeMusicLobby,
+                  setThemeMusicLobby,
+                  themeActually,
+                  setThemeActually,
+                  setThemeMusicLobbyPaused,
+                  themeMusicLobbyPaused,
+                  urls: [
+                    { name: "Adventure", url: "/sounds/themes/Adventure.mp3" },
+                    { name: "Chase", url: "/sounds/themes/Chase.mp3" },
+                    {
+                      name: "ForestWalk",
+                      url: "/sounds/themes/ForestWalk.mp3",
+                    },
+                    { name: "The Epic", url: "/sounds/themes/The_Epic.mp3" },
+                  ],
+                }}
               />
             </div>
           </div>
@@ -166,7 +169,12 @@ function MenuLobby({ setBgLobby, lobbyThemeMusic }) {
             <div>
               <div className="flex w-fit items-center justify-center overflow-hidden rounded-md border-2 border-white/30 bg-cyan-600 shadow-md">
                 {/* <Cat size={24} weight="fill" className="text-gray-100" /> */}
-                <Image src={profileImage} width={44} height={44} />
+                <Image
+                  src={profileImage}
+                  width={44}
+                  height={44}
+                  alt="Profile"
+                />
               </div>
             </div>
             <div className="flex w-32 flex-col gap-1">
