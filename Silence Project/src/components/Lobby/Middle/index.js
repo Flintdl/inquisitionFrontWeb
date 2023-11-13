@@ -75,7 +75,6 @@ function MiddleLobby({ actions, permissions }) {
       name: 'Customizar',
       action: {
         onClick: () => {
-          setOpenCharacterCustomization(true);
           clickMenuSound();
         },
       },
@@ -85,6 +84,7 @@ function MiddleLobby({ actions, permissions }) {
       name: 'Funções',
       action: {
         onClick: () => {
+          setOpenCharacterCustomization(true);
           clickMenuSound();
         },
       },
@@ -149,7 +149,7 @@ function MiddleLobby({ actions, permissions }) {
             alt="Character Test"
             fill={true}
             priority={true}
-            className="block h-auto w-fit select-none !object-contain xl:!object-cover"
+            className="block h-auto w-fit select-none !object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,1)] xl:!object-cover"
           />
         </div>
         {/* <div className="absolute bottom-80 mt-auto flex h-12 w-full items-center justify-center gap-96">

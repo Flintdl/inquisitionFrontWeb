@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   ArrowFatLineLeft,
   ArrowFatLineRight,
@@ -248,9 +248,27 @@ function CharacterCustomization({ actions, soundAllowed }) {
         />
         <div className="h-full w-full bg-gradient-to-t from-black via-transparent to-black opacity-90"></div>
       </div>
-      <nav></nav>
+      <nav className="mx-4 w-fit rounded-lg border-2 border-white/10 bg-white/5 px-4 py-2 backdrop-blur-lg">
+        <div
+          onClick={() => setOpenCharacterCustomization(false)}
+          className="group/back flex cursor-pointer items-center gap-1 transition-all hover:gap-2 hover:opacity-70">
+          <ArrowFatLineLeft
+            size={24}
+            weight="fill"
+            className="text-white group-hover/back:text-cyan-400"
+            // onClick={navigateBackward}
+          />
+          <CustomTitles
+            tag="p"
+            size={18}
+            pos="left"
+            text="Retornar"
+            customClass="!text-gray-300 group-hover/back:!text-cyan-400 font-KanitBold"
+          />
+        </div>
+      </nav>
       <section className="flex h-full w-full select-none gap-32">
-        <nav className="flex w-auto flex-1 p-4 pb-12">
+        <nav className="hidden w-auto flex-1 p-4 pb-12 lg:flex">
           <ul className="flex h-full w-full flex-col gap-2 rounded-xl border-2 border-white/10 p-2 backdrop-blur-lg">
             <li className="flex items-center gap-2 p-1">
               <Info size={24} weight="fill" className="text-gray-300" />
@@ -280,27 +298,36 @@ function CharacterCustomization({ actions, soundAllowed }) {
                   text="Biografia: "
                   customClass="!text-gray-300 font-Kanit"
                 />
-                {personsTest[pos].info.biography.map((item) => (
-                  <CustomTitles
-                    tag="p"
-                    size={14}
-                    pos="left"
-                    text={item}
-                    customClass="!text-gray-300 font-Kanit"
-                  />
-                ))}
+                <AnimatePresence>
+                  {personsTest[pos].info.biography.map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}>
+                      <CustomTitles
+                        tag="p"
+                        size={14}
+                        pos="left"
+                        text={item}
+                        customClass="!text-gray-300 font-Kanit"
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </li>
           </ul>
         </nav>
         <section className="mx-auto mt-auto flex h-full w-fit select-none items-end pb-12">
           <div className="flex items-center justify-center gap-4">
-            <div className="flex h-fit cursor-pointer items-center justify-center rounded-lg border-2 bg-black/60 p-1 hover:opacity-80">
+            <div
+              onClick={navigateBackward}
+              className="flex h-fit cursor-pointer items-center justify-center rounded-lg border-2 bg-black/60 p-1 hover:opacity-80">
               <ArrowFatLineLeft
                 size={32}
                 weight="fill"
                 className="text-white"
-                onClick={navigateBackward}
               />
             </div>
             <AnimatePresence>
@@ -330,17 +357,18 @@ function CharacterCustomization({ actions, soundAllowed }) {
                 })}
               </ul>
             </AnimatePresence>
-            <div className="flex h-fit cursor-pointer items-center justify-center rounded-lg border-2 bg-black/60 p-1 hover:opacity-80">
+            <div
+              onClick={navigateForward}
+              className="flex h-fit cursor-pointer items-center justify-center rounded-lg border-2 bg-black/60 p-1 hover:opacity-80">
               <ArrowFatLineRight
                 size={32}
                 weight="fill"
                 className="text-white"
-                onClick={navigateForward}
               />
             </div>
           </div>
         </section>
-        <nav className="flex h-full w-auto flex-1 p-4 pb-12">
+        <nav className="hidden h-full w-auto flex-1 p-4 pb-12 lg:flex">
           <ul className="flex h-full w-full flex-col gap-2 rounded-xl border-2 border-white/10 p-2 backdrop-blur-lg">
             <li className="flex items-center gap-2 p-1">
               <Info size={24} weight="fill" className="text-gray-300" />
@@ -355,8 +383,8 @@ function CharacterCustomization({ actions, soundAllowed }) {
             <li className="flex max-h-[850px] gap-2 overflow-y-auto p-1 scrollbar-thin scrollbar-track-gray-900/40 scrollbar-thumb-gray-500/40">
               <div className="flex flex-col gap-2">
                 {personsTest[pos].info.attributes.map(
-                  ({ name, tier, description }) => (
-                    <>
+                  ({ name, tier, description }, i) => (
+                    <React.Fragment key={i}>
                       <CustomTitles
                         tag="p"
                         size={18}
@@ -378,7 +406,7 @@ function CharacterCustomization({ actions, soundAllowed }) {
                         text={description}
                         customClass="!text-gray-300 font-Kanit"
                       />
-                    </>
+                    </React.Fragment>
                   ),
                 )}
               </div>
