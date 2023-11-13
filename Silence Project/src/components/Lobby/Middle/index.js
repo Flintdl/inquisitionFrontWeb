@@ -1,9 +1,13 @@
-import Image from "next/image";
-import characterTest from "../../../../public/images/character_vampire_01.png";
-import { useEffect, useRef, useState } from "react";
+import Image from 'next/image';
+import characterTest from '../../../../public/images/characters/character_villager.png';
+import { useEffect, useRef, useState } from 'react';
 
 function MiddleLobby({ actions, permissions }) {
-  const { setOpenServerFind, setOpenCreateMatch } = actions;
+  const {
+    setOpenServerFind,
+    setOpenCreateMatch,
+    setOpenCharacterCustomization,
+  } = actions;
   const { soundAllowed } = permissions;
 
   const [rotationAngle, setRotationAngle] = useState(0);
@@ -37,18 +41,18 @@ function MiddleLobby({ actions, permissions }) {
   }, [isRotatingLeft, isRotatingRight]);
 
   const playMenuSound = () => {
-    const audio = new Audio("/sounds/menu-selection.mp3");
-    if (soundAllowed === "allowed") audio.play();
+    const audio = new Audio('/sounds/menu-selection.mp3');
+    if (soundAllowed === 'allowed') audio.play();
   };
 
   const clickMenuSound = () => {
-    const audio = new Audio("/sounds/click-menu.mp3");
-    if (soundAllowed === "allowed") audio.play();
+    const audio = new Audio('/sounds/click-menu.mp3');
+    if (soundAllowed === 'allowed') audio.play();
   };
 
   const list_menu = [
     {
-      name: "Jogar",
+      name: 'Jogar',
       action: {
         onClick: () => {
           clickMenuSound();
@@ -58,7 +62,7 @@ function MiddleLobby({ actions, permissions }) {
       emphasis: true,
     },
     {
-      name: "Encontrar servidor",
+      name: 'Encontrar servidor',
       action: {
         onClick: () => {
           clickMenuSound();
@@ -68,7 +72,17 @@ function MiddleLobby({ actions, permissions }) {
       emphasis: false,
     },
     {
-      name: "Customizar",
+      name: 'Customizar',
+      action: {
+        onClick: () => {
+          setOpenCharacterCustomization(true);
+          clickMenuSound();
+        },
+      },
+      emphasis: false,
+    },
+    {
+      name: 'Funções',
       action: {
         onClick: () => {
           clickMenuSound();
@@ -77,7 +91,7 @@ function MiddleLobby({ actions, permissions }) {
       emphasis: false,
     },
     {
-      name: "Funções",
+      name: 'Tutorial',
       action: {
         onClick: () => {
           clickMenuSound();
@@ -86,16 +100,7 @@ function MiddleLobby({ actions, permissions }) {
       emphasis: false,
     },
     {
-      name: "Tutorial",
-      action: {
-        onClick: () => {
-          clickMenuSound();
-        },
-      },
-      emphasis: false,
-    },
-    {
-      name: "Sair",
+      name: 'Sair',
       action: {
         onClick: () => {
           clickMenuSound();
@@ -118,9 +123,8 @@ function MiddleLobby({ actions, permissions }) {
               onMouseEnter={() => playMenuSound()}
               {...action}
               className={`w-fit cursor-pointer transition-all hover:pl-1 hover:opacity-70 ${
-                emphasis ? "text-green-500" : "text-white/70"
-              }`}
-            >
+                emphasis ? 'text-green-500' : 'text-white/70'
+              }`}>
               {name}
             </li>
           ))}
@@ -131,10 +135,9 @@ function MiddleLobby({ actions, permissions }) {
           ref={characterRef}
           style={{
             transform: `rotateY(${rotationAngle}deg)`,
-            transformStyle: "preserve-3d",
+            transformStyle: 'preserve-3d',
           }}
-          className="relative flex h-full w-full max-w-[400px] overflow-hidden py-4"
-        >
+          className="relative flex h-full w-full max-w-[400px] overflow-hidden py-4">
           {/* <div className="absolute -top-4 left-[50%] z-10 -translate-x-[50%] font-AntonRegular text-xl text-white">
             Flintovsk
           </div> */}

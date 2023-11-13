@@ -6,6 +6,7 @@ import { ArrowFatLeft } from "@phosphor-icons/react";
 import { useSocket } from "../../../../contexts/SocketContext";
 import { useMessage } from "../../../../contexts/MessageContex";
 import MessageContainer from "../../_Global/Messages";
+import { useRouter } from "next/router";
 
 function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
   const { setOpenCreateMatch } = actions;
@@ -22,6 +23,8 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
   const [turn, setTurn] = useState(false);
   const [count, setCount] = useState(15);
 
+  const router = useRouter();
+
   const [friends, setFriends] = useState([]);
 
   const [loadingFastMatch, setLoadingFastMatch] = useState(false);
@@ -32,6 +35,7 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
     setRooms((prevState) => [...prevState, { roomID: idM }]);
     socket.emit("create_room", idM); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
     setRoomActive(idM);
+    router.push(`/match-fast-game/${idM}`);
     // socket.emit("start_game");
   };
 

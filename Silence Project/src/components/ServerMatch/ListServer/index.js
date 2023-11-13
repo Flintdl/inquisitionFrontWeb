@@ -1,51 +1,48 @@
-import {
-  Lock,
-  LockKeyOpen,
-  MagnifyingGlass,
-  Star,
-} from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
-import CustomDialog from "../../_Global/Dialog";
-import CustomButton from "../../_Global/Commons/Buttons";
+import { MagnifyingGlass } from '@phosphor-icons/react'
+import { useEffect, useState } from 'react'
+import CustomDialog from '../../_Global/Dialog'
+import CustomButton from '../../_Global/Commons/Buttons'
+import { useRouter } from 'next/router'
 
 function ListServer({ actions, soundAllowed, roomsList, socket }) {
-  const { setOpenServerFind } = actions;
-  const { rooms, setRooms, roomActive, setRoomActive } = roomsList;
+  const { setOpenServerFind } = actions
+  const { rooms, setRooms, roomActive, setRoomActive } = roomsList
 
-  const [servers, setServers] = useState([]);
+  const router = useRouter()
+
+  const [servers, setServers] = useState([])
 
   useEffect(() => {
-    console.log(rooms);
+    console.log(rooms)
     setTimeout(() => {
       setServers([
         {
           id: 0,
-          name: "Servidor 01",
+          name: 'Servidor 01',
           favorite: true,
           match: { quantity: 43, max: 70, privateMatch: false },
         },
         {
           id: 1,
-          name: "Servidor 02",
+          name: 'Servidor 02',
           favorite: false,
           match: { quantity: 12, max: 15, privateMatch: true },
         },
         {
           id: 2,
-          name: "Servidor 03",
+          name: 'Servidor 03',
           favorite: false,
           match: { quantity: 100, max: 100, privateMatch: false },
         },
-      ]);
-    }, 1000);
-  }, []);
+      ])
+    }, 1000)
+  }, [])
 
   return (
     <CustomDialog
       title="Encontrar Servidor"
       close={setOpenServerFind}
-      soundAllowed={soundAllowed}
-    >
+      soundAllowed={soundAllowed}>
       <div className="relative">
         <input
           className="rounded-tg mb-2 h-11 w-full appearance-none rounded-lg border-2 border-gray-300 border-transparent bg-gray-300/50 p-3 pr-12 font-AntonRegular text-sm text-white placeholder-white focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
@@ -67,12 +64,13 @@ function ListServer({ actions, soundAllowed, roomsList, socket }) {
                 key={i}
                 props={{
                   roomID,
+                  router,
                   setRoomActive,
                   socket,
                   // , name, favorite, quantity, max, privateMatch
                 }}
               />
-            );
+            )
           })
         ) : (
           <Loading />
@@ -80,25 +78,25 @@ function ListServer({ actions, soundAllowed, roomsList, socket }) {
         {servers.length > 0 && <ShowMore />}
       </ul>
     </CustomDialog>
-  );
+  )
 }
 
 const ServerList = ({ props }) => {
   const {
     roomID,
+    router,
     setRoomActive,
     socket,
     // name, favorite, quantity, max, privateMatch
-  } = props;
+  } = props
   return (
     <li
       // key={id}
       onClick={() => {
-        socket.emit("join_room", roomID); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
-        setRoomActive(roomID);
+        // socket.emit("join_room", roomID); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
+        router.push(`/match-fast-game/${roomID}`)
       }}
-      className="flex items-center justify-between rounded-md border border-gray-300/30 bg-gradient-to-r from-gray-200/30 to-gray-100/30 p-2 font-AntonRegular text-gray-600"
-    >
+      className="flex items-center justify-between rounded-md border border-gray-300/30 bg-gradient-to-r from-gray-200/30 to-gray-100/30 p-2 font-AntonRegular text-gray-600">
       <div className="flex items-center gap-2">
         {/* <p className="mt-1 text-sm text-cyan-600">ID: {id}</p> */}
         {/* <Star
@@ -124,8 +122,8 @@ const ServerList = ({ props }) => {
         </p> */}
       </div>
     </li>
-  );
-};
+  )
+}
 
 const Loading = () => {
   return (
@@ -134,11 +132,11 @@ const Loading = () => {
         Carregando...
       </p>
     </div>
-  );
-};
+  )
+}
 
 const ShowMore = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   return (
     <li className="mx-auto flex">
       <CustomButton
@@ -149,7 +147,7 @@ const ShowMore = () => {
         action={{ onClick: () => setLoading(!loading) }}
       />
     </li>
-  );
-};
+  )
+}
 
-export default ListServer;
+export default ListServer

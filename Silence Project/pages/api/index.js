@@ -55,11 +55,12 @@ const SocketHandler = (req, res) => {
       });
 
       socket.on("join_room", (roomName) => {
+        const existingRoom = usersRoom.find((room) => room.roomID === roomName);
+        if (existingRoom.users.find((user) => user.id === socket.id)) return;
         socket.join(roomName);
         socket.room = roomName;
         console.log(`User ${socket.id} joined room: ${roomName}`);
         // Procurar a sala com base no roomName
-        const existingRoom = usersRoom.find((room) => room.roomID === roomName);
 
         if (existingRoom) {
           // Se a sala já existe, adicione o usuário a essa sala

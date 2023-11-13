@@ -31,6 +31,7 @@ function ContentLobby({ children, bgLobby = 1 }) {
           title="Character Test"
           alt={`Character Test ${bgLobby}`}
           fill={true}
+          quality={100}
           priority={true}
           className="block h-auto w-full select-none !object-cover"
         />

@@ -1,1 +1,17 @@
-{ "plugins": ["prettier-plugin-tailwindcss"] }
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "jsxBracketSameLine": true,
+  "printWidth": 80,
+  "tabWidth": 2,
+  "overrides": [
+    {
+      "files": "*.js",
+      "options": {
+        "parser": "babel"
+      }
+    }
+  ],
+  "plugins": ["prettier-plugin-tailwindcss"]
+}
