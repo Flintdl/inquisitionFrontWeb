@@ -1,19 +1,19 @@
-import { MagnifyingGlass } from '@phosphor-icons/react'
-import { useEffect, useState } from 'react'
-import CustomDialog from '../../_Global/Dialog'
-import CustomButton from '../../_Global/Commons/Buttons'
-import { useRouter } from 'next/router'
+import { MagnifyingGlass } from '@phosphor-icons/react';
+import { useEffect, useState } from 'react';
+import CustomDialog from '../../_Global/Dialog';
+import CustomButton from '../../_Global/Commons/Buttons';
+import { useRouter } from 'next/router';
 
 function ListServer({ actions, soundAllowed, roomsList, socket }) {
-  const { setOpenServerFind } = actions
-  const { rooms, setRooms, roomActive, setRoomActive } = roomsList
+  const { setOpenServerFind } = actions;
+  const { rooms, setRooms, roomActive, setRoomActive } = roomsList;
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const [servers, setServers] = useState([])
+  const [servers, setServers] = useState([]);
 
   useEffect(() => {
-    console.log(rooms)
+    console.log(rooms);
     setTimeout(() => {
       setServers([
         {
@@ -34,9 +34,9 @@ function ListServer({ actions, soundAllowed, roomsList, socket }) {
           favorite: false,
           match: { quantity: 100, max: 100, privateMatch: false },
         },
-      ])
-    }, 1000)
-  }, [])
+      ]);
+    }, 1000);
+  }, []);
 
   return (
     <CustomDialog
@@ -45,12 +45,12 @@ function ListServer({ actions, soundAllowed, roomsList, socket }) {
       soundAllowed={soundAllowed}>
       <div className="relative">
         <input
-          className="rounded-tg mb-2 h-11 w-full appearance-none rounded-lg border-2 border-gray-300 border-transparent bg-gray-300/50 p-3 pr-12 font-AntonRegular text-sm text-white placeholder-white focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+          className="rounded-tg mb-2 h-11 w-full appearance-none rounded-lg border-2 border-gray-300 border-transparent bg-gray-300/50 p-3 pr-12 font-KanitRegular text-sm text-white placeholder-white focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
           placeholder="Procurar um servidor"
           autoFocus
         />
         <MagnifyingGlass
-          weight="duotone"
+          weight="fill"
           size={24}
           className="absolute right-3 top-3 text-white"
         />
@@ -70,15 +70,15 @@ function ListServer({ actions, soundAllowed, roomsList, socket }) {
                   // , name, favorite, quantity, max, privateMatch
                 }}
               />
-            )
+            );
           })
         ) : (
           <Loading />
         )}
-        {servers.length > 0 && <ShowMore />}
+        {/* {servers.length > 0 && <ShowMore />} */}
       </ul>
     </CustomDialog>
-  )
+  );
 }
 
 const ServerList = ({ props }) => {
@@ -88,13 +88,13 @@ const ServerList = ({ props }) => {
     setRoomActive,
     socket,
     // name, favorite, quantity, max, privateMatch
-  } = props
+  } = props;
   return (
     <li
       // key={id}
       onClick={() => {
         // socket.emit("join_room", roomID); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
-        router.push(`/match-fast-game/${roomID}`)
+        router.push(`/match-fast-game/${roomID}`);
       }}
       className="flex items-center justify-between rounded-md border border-gray-300/30 bg-gradient-to-r from-gray-200/30 to-gray-100/30 p-2 font-AntonRegular text-gray-600">
       <div className="flex items-center gap-2">
@@ -122,8 +122,8 @@ const ServerList = ({ props }) => {
         </p> */}
       </div>
     </li>
-  )
-}
+  );
+};
 
 const Loading = () => {
   return (
@@ -132,11 +132,11 @@ const Loading = () => {
         Carregando...
       </p>
     </div>
-  )
-}
+  );
+};
 
 const ShowMore = () => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   return (
     <li className="mx-auto flex">
       <CustomButton
@@ -147,7 +147,7 @@ const ShowMore = () => {
         action={{ onClick: () => setLoading(!loading) }}
       />
     </li>
-  )
-}
+  );
+};
 
-export default ListServer
+export default ListServer;

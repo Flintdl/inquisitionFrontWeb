@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import CustomTitles from "../../_Global/Commons/Titles";
+import { useEffect, useState } from 'react';
+import CustomTitles from '../../_Global/Commons/Titles';
 import {
   Pause,
   Play,
@@ -8,7 +8,7 @@ import {
   SkipForward,
   SpeakerHigh,
   SpeakerSlash,
-} from "@phosphor-icons/react";
+} from '@phosphor-icons/react';
 
 function LobbyThemeMusic({ props }) {
   const {
@@ -36,7 +36,7 @@ function LobbyThemeMusic({ props }) {
         themeMusicLobby.pause();
       }
     } else {
-      if (soundAllowed === "allowed") {
+      if (soundAllowed === 'allowed') {
         // Continua o som quando a página é restaurada
         if (themeMusicLobbyPaused) {
           themeMusicLobby.play();
@@ -83,22 +83,22 @@ function LobbyThemeMusic({ props }) {
       setCurrentMusicIndex(urls.indexOf(initialMusic));
       setThemeActually(initialMusic.name);
       const newThemeMusicLobby = new Audio(initialMusic.url);
-      newThemeMusicLobby.addEventListener("ended", handleMusicEnd);
+      newThemeMusicLobby.addEventListener('ended', handleMusicEnd);
       setThemeMusicLobby(newThemeMusicLobby);
     }
 
-    if (themeMusicLobbyPaused && soundAllowed === "allowed") {
+    if (themeMusicLobbyPaused && soundAllowed === 'allowed') {
       themeMusicLobby.play();
       themeMusicLobby.loop = false;
     } else if (themeMusicLobby !== null) {
       themeMusicLobby.pause();
     }
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     // Remove o event listener quando o componente é desmontado
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [soundAllowed, themeMusicLobby, themeMusicLobbyPaused, urls]);
 
@@ -107,33 +107,33 @@ function LobbyThemeMusic({ props }) {
       <SkipBack
         weight="fill"
         onClick={playPreviousMusic}
-        className="cursor-pointer"
+        className="cursor-pointer text-amber-600"
       />
       {themeMusicLobbyPaused && (
         <Pause
           weight="fill"
           onClick={() => setThemeMusicLobbyPaused(!themeMusicLobbyPaused)}
-          className="cursor-pointer"
+          className="cursor-pointer text-amber-600"
         />
       )}
       {!themeMusicLobbyPaused && (
         <Play
           weight="fill"
           onClick={() => setThemeMusicLobbyPaused(!themeMusicLobbyPaused)}
-          className="cursor-pointer"
+          className="cursor-pointer text-amber-600"
         />
       )}
       <SkipForward
         weight="fill"
         onClick={playNextMusic}
-        className="cursor-pointer"
+        className="cursor-pointer text-amber-600"
       />
       <CustomTitles
         tag="p"
         size={12}
         pos="left"
         text={themeActually}
-        customClass="!text-cyan-400 font-KanitBold"
+        customClass="!text-amber-400 font-KanitBold"
       />
     </div>
   );

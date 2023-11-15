@@ -15,6 +15,7 @@ import CustomButton from '../src/components/_Global/Commons/Buttons';
 import CustomTitles from '../src/components/_Global/Commons/Titles';
 import { useSoundAllowed } from '../contexts/SoundContext';
 import CharacterCustomization from '../src/components/Character/Customization';
+import Configurations from '../src/components/Configurations';
 
 export default function HomePage() {
   const { soundAllowed, setSoundAllowed } = useSoundAllowed();
@@ -28,6 +29,8 @@ export default function HomePage() {
 
   const [openCharacterCustomization, setOpenCharacterCustomization] =
     useState(false);
+
+  const [openConfiguration, setOpenConfiguration] = useState(false);
 
   // Character
 
@@ -46,7 +49,7 @@ export default function HomePage() {
   const { messages, setMessages } = useMessage();
   const socketInitializer = async () => {
     await fetch('/api');
-    let sk = io('ws://192.168.33.118:3000', {
+    let sk = io('ws://localhost:3000', {
       transports: ['websocket'],
     });
 
@@ -138,6 +141,7 @@ export default function HomePage() {
           setOpenServerFind,
           setOpenCreateMatch,
           setOpenCharacterCustomization,
+          setOpenConfiguration,
         }}
         permissions={{ soundAllowed }}
       />
@@ -205,6 +209,12 @@ export default function HomePage() {
         {openCharacterCustomization && (
           <CharacterCustomization
             actions={{ setOpenCharacterCustomization }}
+            soundAllowed={soundAllowed}
+          />
+        )}
+        {openConfiguration && (
+          <Configurations
+            actions={{ setOpenConfiguration }}
             soundAllowed={soundAllowed}
           />
         )}

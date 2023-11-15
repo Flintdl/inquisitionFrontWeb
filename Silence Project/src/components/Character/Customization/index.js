@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import {
-  ArrowFatLineLeft,
-  ArrowFatLineRight,
-  Info,
-} from '@phosphor-icons/react';
+import { ArrowFatLineLeft } from '@phosphor-icons/react';
 import Image from 'next/image';
-import { AnimatePresence, motion } from 'framer-motion';
 
 import characterVampire from '../../../../public/images/characters/character_vampire.png';
 import characterWitch from '../../../../public/images/characters/character_witch.png';
@@ -20,6 +15,9 @@ import bgMermaid from '../../../../public/images/custom_character/background_cus
 import CustomButton from '../../_Global/Commons/Buttons';
 import CustomTitles from '../../_Global/Commons/Titles';
 import CustomDialog from '../../_Global/Dialog';
+import CustomizationExhibition from './Exhibition';
+import CustomizationLeftBar from './Biography';
+import CustomizationRightBar from './Attributes';
 
 const personsTest = [
   {
@@ -77,8 +75,6 @@ const personsTest = [
         'Há muito tempo, nas profundezas de uma floresta enigmática, existia uma bruxa conhecida como Kanit Zoterus. Seu nome era sussurrado entre as folhas das árvores e ecoava pelos riachos mágicos que cruzavam a região. Kanit nasceu em uma família de curandeiros e herbalistas, mas desde cedo, ela exibiu talentos extraordinários que iam além das habilidades comuns de sua linhagem.',
         'Seu caminho na magia negra começou quando, ainda jovem, ela encontrou um antigo grimório escondido em uma caverna oculta. Este livro, empoeirado e repleto de símbolos arcanos, revelou a Kanit os segredos proibidos da magia das sombras. Fascinada por esse conhecimento proibido, ela começou a estudar as artes sombrias, desvendando segredos que levaram outros a repudiá-la.',
         'Conforme seus poderes cresceram, Kanit Zoterus se isolou na floresta, construindo uma torre sombria onde praticava seus rituais e aprimorava suas habilidades. Diziam que ela conseguia convocar criaturas das profundezas, manipular as sombras para criar ilusões e até mesmo prever o futuro com a observação de estrelas específicas.',
-        'Apesar de sua reputação sinistra, Kanit não era uma bruxa malévola. Ela utilizava suas habilidades para proteger a floresta e seus habitantes mágicos dos perigos que espreitavam nas trevas. No entanto, sua busca por conhecimento a levou a enfrentar desafios sombrios, incluindo seres malignos que cobiçavam seu poder.',
-        'A história de Kanit Zoterus tornou-se uma lenda na região, misturando temor e admiração. Alguns a viam como uma guardiã da natureza, enquanto outros a consideravam uma ameaça que deveria ser erradicada. Seu destino permaneceu envolto em mistério, deixando a floresta repleta de rumores e histórias sobre a bruxa que controlava as sombras para proteger a magia que fluía entre as árvores.',
       ],
       attributes: [
         {
@@ -104,12 +100,6 @@ const personsTest = [
           tier: '7/10',
           description:
             'Seu conhecimento arcano é vasto, especialmente em relação às artes sombrias. Kanit é capaz de decifrar inscrições mágicas antigas, desvendar enigmas místicos e entender os meandros das energias mágicas que permeiam a floresta.',
-        },
-        {
-          name: 'Intuição Sombria',
-          tier: '9/10',
-          description:
-            'Kanit possui uma intuição aguçada quando se trata de detectar ameaças ocultas. Ela pode sentir a presença de seres sobrenaturais, antecipando emboscadas e detectando a influência de forças sombrias na região.',
         },
       ],
     },
@@ -246,188 +236,44 @@ function CharacterCustomization({ actions, soundAllowed }) {
           priority={true}
           className="block h-auto w-full select-none !object-cover"
         />
-        <div className="h-full w-full bg-gradient-to-t from-black via-transparent to-black opacity-90"></div>
+        <div className="h-full w-full bg-gradient-to-r from-black via-transparent to-black opacity-90"></div>
       </div>
-      <nav className="mx-4 w-fit rounded-lg border-2 border-white/10 bg-white/5 px-4 py-2 backdrop-blur-lg">
-        <div
-          onClick={() => setOpenCharacterCustomization(false)}
-          className="group/back flex cursor-pointer items-center gap-1 transition-all hover:gap-2 hover:opacity-70">
-          <ArrowFatLineLeft
-            size={24}
-            weight="fill"
-            className="text-white group-hover/back:text-cyan-400"
-            // onClick={navigateBackward}
-          />
-          <CustomTitles
-            tag="p"
-            size={18}
-            pos="left"
-            text="Retornar"
-            customClass="!text-gray-300 group-hover/back:!text-cyan-400 font-KanitBold"
-          />
-        </div>
-      </nav>
-      <section className="flex h-full w-full select-none gap-32">
-        <nav className="hidden w-auto flex-1 p-4 pb-12 lg:flex">
-          <ul className="flex h-full w-full flex-col gap-2 rounded-xl border-2 border-white/10 p-2 backdrop-blur-lg">
-            <li className="flex items-center gap-2 p-1">
-              <Info size={24} weight="fill" className="text-gray-300" />
-              <CustomTitles
-                tag="p"
-                size={18}
-                pos="center"
-                text={`Informações sobre ${personsTest[pos].name}`}
-                customClass="!text-gray-300 font-Kanit"
-              />
-            </li>
-            <li className="flex items-center gap-2 p-1">
-              <CustomTitles
-                tag="p"
-                size={18}
-                pos="center"
-                text={`Nome: ${personsTest[pos].info.name}`}
-                customClass="!text-gray-300 font-Kanit"
-              />
-            </li>
-            <li className="flex gap-2 overflow-y-auto p-1 scrollbar-thin scrollbar-track-gray-900/40 scrollbar-thumb-gray-500/40">
-              <div className="flex flex-col gap-4">
-                <CustomTitles
-                  tag="p"
-                  size={18}
-                  pos="left"
-                  text="Biografia: "
-                  customClass="!text-gray-300 font-Kanit"
-                />
-                <AnimatePresence>
-                  {personsTest[pos].info.biography.map((item, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}>
-                      <CustomTitles
-                        tag="p"
-                        size={14}
-                        pos="left"
-                        text={item}
-                        customClass="!text-gray-300 font-Kanit"
-                      />
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            </li>
-          </ul>
-        </nav>
-        <section className="mx-auto mt-auto flex h-full w-fit select-none items-end pb-12">
-          <div className="flex items-center justify-center gap-4">
-            <div
-              onClick={navigateBackward}
-              className="flex h-fit cursor-pointer items-center justify-center rounded-lg border-2 bg-black/60 p-1 hover:opacity-80">
-              <ArrowFatLineLeft
-                size={32}
-                weight="fill"
-                className="text-white"
-              />
-            </div>
-            <AnimatePresence>
-              <ul className="h-[600px] w-[500px]">
-                {personsTest.map(({ name, image }, i) => {
-                  return i === pos ? (
-                    <motion.div
-                      key={i}
-                      initial={{ x: direction ? 300 : -300, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: direction ? -300 : 300, opacity: 0 }}
-                      className="relative mx-auto flex h-[600px] max-w-[450px] overflow-hidden py-4">
-                      {/* <div className="absolute left-[50%] top-0 z-10 -translate-x-[50%] rounded-md border-2 bg-black px-4 py-1 font-AntonRegular text-xl text-white">
-                        {name}
-                      </div> */}
-                      <div className="absolute z-10 h-full w-full"></div>
-                      <Image
-                        src={image}
-                        title={name}
-                        alt={name}
-                        fill={true}
-                        priority={true}
-                        className="block h-auto w-fit select-none bg-clip-content !object-contain pt-12 drop-shadow-[0_35px_35px_rgba(0,0,0,1)] xl:!object-cover"
-                      />
-                    </motion.div>
-                  ) : null;
-                })}
-              </ul>
-            </AnimatePresence>
-            <div
-              onClick={navigateForward}
-              className="flex h-fit cursor-pointer items-center justify-center rounded-lg border-2 bg-black/60 p-1 hover:opacity-80">
-              <ArrowFatLineRight
-                size={32}
-                weight="fill"
-                className="text-white"
-              />
-            </div>
-          </div>
-        </section>
-        <nav className="hidden h-full w-auto flex-1 p-4 pb-12 lg:flex">
-          <ul className="flex h-full w-full flex-col gap-2 rounded-xl border-2 border-white/10 p-2 backdrop-blur-lg">
-            <li className="flex items-center gap-2 p-1">
-              <Info size={24} weight="fill" className="text-gray-300" />
-              <CustomTitles
-                tag="p"
-                size={18}
-                pos="center"
-                text="Atributos"
-                customClass="!text-gray-300 font-Kanit"
-              />
-            </li>
-            <li className="flex max-h-[850px] gap-2 overflow-y-auto p-1 scrollbar-thin scrollbar-track-gray-900/40 scrollbar-thumb-gray-500/40">
-              <div className="flex flex-col gap-2">
-                {personsTest[pos].info.attributes.map(
-                  ({ name, tier, description }, i) => (
-                    <React.Fragment key={i}>
-                      <CustomTitles
-                        tag="p"
-                        size={18}
-                        pos="left"
-                        text={name}
-                        customClass="!text-cyan-400 font-KanitRegular"
-                      />
-                      <CustomTitles
-                        tag="p"
-                        size={12}
-                        pos="left"
-                        text={`Classificação: ${tier}`}
-                        customClass="!text-yellow-400 font-KanitRegular"
-                      />
-                      <CustomTitles
-                        tag="p"
-                        size={14}
-                        pos="left"
-                        text={description}
-                        customClass="!text-gray-300 font-Kanit"
-                      />
-                    </React.Fragment>
-                  ),
-                )}
-              </div>
-            </li>
-          </ul>
-        </nav>
-      </section>
-      {/* <section className="mt-auto flex items-center justify-center gap-2">
-        <CustomButton
-          title="Aceitar"
-          color="primary"
-          action={{
-            onClick: () => {
-              setSoundAllowed('allowed');
-              setOpenAcceptSound(false);
-            },
-          }}
+      <CustomizationNavBack
+        setOpenCharacterCustomization={setOpenCharacterCustomization}
+      />
+      <section className="flex h-full max-h-[calc(100%-90px)] w-full select-none gap-32 pb-4">
+        <CustomizationLeftBar props={{ personsTest, pos }} />
+        <CustomizationExhibition
+          props={{ personsTest, pos, direction }}
+          actions={{ navigateBackward, navigateForward }}
         />
-      </section> */}
+        <CustomizationRightBar props={{ personsTest, pos }} />
+      </section>
     </CustomDialog>
   );
 }
+
+const CustomizationNavBack = ({ setOpenCharacterCustomization }) => {
+  return (
+    <nav className="mx-4 w-fit rounded-lg border-2 border-white/10 bg-white/5 px-4 py-2 backdrop-blur-lg">
+      <div
+        onClick={() => setOpenCharacterCustomization(false)}
+        className="group/back flex cursor-pointer items-center gap-1 transition-all hover:gap-2 hover:opacity-70">
+        <ArrowFatLineLeft
+          size={24}
+          weight="fill"
+          className="text-white group-hover/back:text-cyan-400"
+        />
+        <CustomTitles
+          tag="p"
+          size={18}
+          pos="left"
+          text="Retornar"
+          customClass="!text-gray-300 group-hover/back:!text-cyan-400 font-KanitBold"
+        />
+      </div>
+    </nav>
+  );
+};
 
 export default CharacterCustomization;
