@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import characterTest from '../../../../public/images/characters/character_villager.png';
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 
 function MiddleLobby({ actions, permissions }) {
   const {
@@ -10,6 +11,8 @@ function MiddleLobby({ actions, permissions }) {
     setOpenConfiguration,
   } = actions;
   const { soundAllowed } = permissions;
+
+  const router = useRouter();
 
   const [rotationAngle, setRotationAngle] = useState(0);
   const [isRotatingLeft, setIsRotatingLeft] = useState(false);
@@ -116,6 +119,7 @@ function MiddleLobby({ actions, permissions }) {
       action: {
         onClick: () => {
           clickMenuSound();
+          router.push('/');
         },
       },
       emphasis: false,

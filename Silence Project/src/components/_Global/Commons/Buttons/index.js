@@ -1,5 +1,7 @@
-import { CircleNotch } from "@phosphor-icons/react";
-import { useEffect, useRef, useState } from "react";
+import { CircleNotch } from '@phosphor-icons/react';
+import { useEffect, useRef, useState } from 'react';
+import { useSoundAllowed } from '../../../../../contexts/SoundContext';
+import { SoundExecuteClick } from '../../../../utils/Sound/clickSound';
 
 function CustomButton({
   title,
@@ -7,7 +9,10 @@ function CustomButton({
   outline = false,
   loading = false,
   action,
+  ...rest
 }) {
+  const { soundAllowed } = useSoundAllowed();
+
   const buttonRef = useRef(null);
   const [size, setSize] = useState(null);
 
@@ -18,16 +23,20 @@ function CustomButton({
     }
   }, []);
 
+  const playCloseSound = () => {
+    SoundExecuteClick('/sounds/click-menu.mp3', soundAllowed);
+  };
+
   const resultColor = () => {
-    const bg = outline ? "hover:bg-white" : "bg-white hover:opacity-70";
+    const bg = outline ? 'hover:bg-white' : 'bg-white hover:opacity-70';
     switch (color) {
-      case "primary":
+      case 'primary':
         return `border-cyan-500 text-cyan-500 ${bg}`;
-      case "secondary":
+      case 'secondary':
         return `border-green-500 text-green-500 ${bg}`;
-      case "danger":
+      case 'danger':
         return `border-red-500 text-red-500 ${bg}`;
-      case "warn":
+      case 'warn':
         return `border-yellow-500 text-yellow-500 ${bg}`;
       default:
         return `border-cyan-500 text-cyan-500 ${bg}`;
@@ -36,13 +45,13 @@ function CustomButton({
 
   const resultColorText = () => {
     switch (color) {
-      case "primary":
+      case 'primary':
         return `text-cyan-500`;
-      case "secondary":
+      case 'secondary':
         return `text-green-500`;
-      case "danger":
+      case 'danger':
         return `text-red-500`;
-      case "warn":
+      case 'warn':
         return `text-yellow-500`;
       default:
         return `text-cyan-500`;
@@ -51,12 +60,13 @@ function CustomButton({
 
   return (
     <button
+      onMouseDown={() => playCloseSound()}
       disabled={loading}
       ref={buttonRef}
       className={`w-fit cursor-pointer items-center justify-between rounded-md border-2 p-2 font-AntonRegular transition-colors ${resultColor()}`}
       style={{ width: `${loading && size}px` }}
       {...action}
-    >
+      {...rest}>
       {loading ? (
         <CircleNotch
           size={24}

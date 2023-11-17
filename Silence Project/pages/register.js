@@ -1,10 +1,10 @@
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import bgLogin from '../public/images/login/bg_login_page.png';
+import bgRegister from '../public/images/register/bg_register_page.png';
 import WereWolfLogotype from '../public/images/silence_logotype.png';
 import CustomButton from '../src/components/_Global/Commons/Buttons';
 import CustomInput from '../src/components/_Global/Commons/Inputs';
@@ -20,8 +20,8 @@ function Login() {
     <section className="relative h-full w-full">
       <div className={`fixed left-0 top-0 h-full w-full`}>
         <Image
-          src={bgLogin}
-          alt="Background Page Login"
+          src={bgRegister}
+          alt="Background Register Login"
           fill={true}
           quality={100}
           priority={true}
@@ -45,6 +45,7 @@ function Login() {
               initialValues={{
                 email: 'diego@diego.com',
                 password: 'Ab1@lsjdn23',
+                confirmPassword: 'Ab1@lsjdn23',
               }}
               validate={(values) => {
                 const errors = {};
@@ -64,14 +65,19 @@ function Login() {
                 ) {
                   errors.password = 'Formato de senha inválido';
                 }
+                if (!values.confirmPassword) {
+                  errors.confirmPassword = 'Confirme sua senha';
+                } else if (values.confirmPassword !== values.password) {
+                  errors.confirmPassword = 'As senhas não coincidem';
+                }
                 return errors;
               }}
               onSubmit={(values, { setSubmitting }) => {
-                setZoom(true);
+                // setZoom(true);
                 setSubmitting(false);
-                setTimeout(() => {
-                  router.push('/home');
-                }, 2800);
+                // setTimeout(() => {
+                //   router.push('/home');
+                // }, 2800);
               }}>
               {({
                 values,
@@ -95,7 +101,7 @@ function Login() {
                     className="absolute -top-[110px] left-[50%] -translate-x-[50%]"
                     priority
                   />
-                  <div className="relative flex pb-4">
+                  <ScopeInputs props={{ errors, touched }} error="email">
                     <CustomInput
                       type="email"
                       name="email"
@@ -111,8 +117,8 @@ function Login() {
                     <span className="absolute -bottom-1 font-KanitBold text-xs uppercase text-red-500">
                       {errors.email && touched.email && errors.email}
                     </span>
-                  </div>
-                  <div className="relative flex pb-4">
+                  </ScopeInputs>
+                  <ScopeInputs props={{ errors, touched }} error="password">
                     <CustomInput
                       type="password"
                       name="password"
@@ -125,22 +131,37 @@ function Login() {
                           : 'border-white/40'
                       }
                     />
-                    <span className="absolute -bottom-1 font-KanitBold text-xs uppercase text-red-500">
-                      {errors.password && touched.password && errors.password}
-                    </span>
-                  </div>
+                  </ScopeInputs>
+                  <ScopeInputs
+                    props={{ errors, touched }}
+                    error="confirmPassword">
+                    <CustomInput
+                      type="password"
+                      name="confirmPassword"
+                      value={values.confirmPassword}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      customClass={
+                        errors.confirmPassword &&
+                        touched.confirmPassword &&
+                        errors.confirmPassword
+                          ? 'border-red-500'
+                          : 'border-white/40'
+                      }
+                    />
+                  </ScopeInputs>
                   <div className="flex justify-between gap-2 pt-2">
                     <CustomButton
                       outline={true}
                       loading={isSubmitting}
-                      title="NOVO VIAJANTE"
+                      title="ENTRAR NO REINO"
                       color="warn"
-                      action={{ onClick: () => router.push('/register') }}
+                      action={{ onClick: () => router.push('/') }}
                       type="button"
                     />
                     <CustomButton
                       loading={isSubmitting}
-                      title="ENTRAR NO REINO"
+                      title="INSCREVER-SE"
                       color="danger"
                       type="submit"
                     />
@@ -154,5 +175,28 @@ function Login() {
     </section>
   );
 }
+
+const ScopeInputs = ({ children, props, error }) => {
+  const { errors, touched } = props;
+  return (
+    <div className="relative flex pb-4">
+      {Array.isArray(children)
+        ? children.map((child) => {
+            return child.props.name
+              ? React.createElement(child.type, {
+                  ...{
+                    ...child.props,
+                    key: child.props.name,
+                  },
+                })
+              : child;
+          })
+        : children}
+      <span className="absolute -bottom-1 font-KanitBold text-xs uppercase text-red-500">
+        {errors[error] && touched[error] && errors[error]}
+      </span>
+    </div>
+  );
+};
 
 export default Login;

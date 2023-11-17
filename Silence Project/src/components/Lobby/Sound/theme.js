@@ -88,8 +88,10 @@ function LobbyThemeMusic({ props }) {
     }
 
     if (themeMusicLobbyPaused && soundAllowed === 'allowed') {
-      themeMusicLobby.play();
-      themeMusicLobby.loop = false;
+      if (themeMusicLobby) {
+        themeMusicLobby.play();
+        themeMusicLobby.loop = false;
+      }
     } else if (themeMusicLobby !== null) {
       themeMusicLobby.pause();
     }
@@ -97,10 +99,19 @@ function LobbyThemeMusic({ props }) {
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     // Remove o event listener quando o componente é desmontado
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [soundAllowed, themeMusicLobby, themeMusicLobbyPaused, urls]);
+
+  useEffect(() => {
+    return () => {
+      console.log('saiu');
+      console.log(themeMusicLobby);
+      if (themeMusicLobby) themeMusicLobby.pause();
+    };
+  }, [themeMusicLobby]);
 
   return (
     <div className="flex items-center gap-1">
