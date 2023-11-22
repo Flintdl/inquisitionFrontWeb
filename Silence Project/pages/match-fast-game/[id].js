@@ -27,11 +27,31 @@ function MatchFastGame({ id }) {
   const [themeMusicLobbyPaused, setThemeMusicLobbyPaused] = useState(true);
   const [themeActually, setThemeActually] = useState('');
 
+  const [audioClock, setAudioClock] = useState(
+    '/sounds/clock-ticking-time.mp3',
+  );
+  const [audioTurn, setAudioTurn] = useState('/sounds/you_turn.mp3');
+
   const [youTurn, setYouTurn] = useState(false);
   const [turnInfo, setTurnInfo] = useState({
     currentPlayer: 'Nobody',
-    countdown: 15,
+    countdown: 5,
   });
+
+  const playTimeSound = () => {
+    if (soundAllowed && soundAllowed === 'allowed') {
+      if (!audioClock.paused) {
+        // Se o áudio estiver em execução, pause
+        audioClock.pause();
+      } else {
+        // Se não estiver em execução, execute
+        audioTurn.play();
+        audioTurn.volume = 0.8;
+        audioClock.play();
+        audioClock.volume = 0.1;
+      }
+    }
+  };
 
   const socketInitializer = async () => {
     if (!socket) {
@@ -81,6 +101,7 @@ function MatchFastGame({ id }) {
       };
 
       const handleYourTurn = () => {
+        playTimeSound();
         setYouTurn(true);
       };
 
@@ -92,6 +113,7 @@ function MatchFastGame({ id }) {
       };
 
       const handleTurnOver = () => {
+        playTimeSound();
         setYouTurn(false);
       };
 
@@ -185,14 +207,13 @@ function MatchFastGame({ id }) {
           <div className="relative flex h-full w-full flex-col overflow-hidden p-4 font-Kanit text-white">
             <Image
               src={image04}
-              title="Character Test"
-              alt={`Character match`}
+              alt="bgLobbyMatch"
               fill={true}
               priority={true}
               className="block h-auto w-full select-none !object-cover brightness-90"
             />
-            <p className="absolute left-[50%] top-12 -translate-x-[50%] rounded-lg bg-red-500 p-4 font-AntonRegular text-xl uppercase">
-              {youTurn ? 'You Turn' : turnInfo.currentPlayer}
+            <p className="absolute left-[50%] top-12 w-44 -translate-x-[50%] rounded-lg border-2 border-white/20 p-4 text-center font-AntonRegular text-xl uppercase italic backdrop-blur-md">
+              {youTurn ? 'Sua vez de votar' : 'Espere a sua vez'}
             </p>
             <p className="absolute left-[50%] top-32 -translate-x-[50%] rounded-lg bg-purple-500 p-4 font-AntonRegular text-xl uppercase">
               {turnInfo.countdown}
@@ -224,7 +245,7 @@ function MatchFastGame({ id }) {
                       className={`relative h-full w-full drop-shadow-[16px_-16px_4px_rgba(0,0,0,.5)] `}>
                       <span
                         className={`h-full w-full ${
-                          id === turnInfo.currentPlayer
+                          id === socket.id
                             ? 'drop-shadow-[0_0px_2px_rgba(255,255,255,1)]'
                             : 'drop-shadow-[0_0px_2px_rgba(0,0,0,1)]'
                         }`}>

@@ -249,7 +249,7 @@ const startGame = (io, roomName, existingRoom) => {
       const currentPlayerId = users[currentPlayerIndex];
       io.to(currentPlayerId).emit('your_turn');
 
-      let countdown = 4;
+      let countdown = 5;
       const countdownInterval = setInterval(() => {
         io.to(roomName).emit('turn_info', {
           currentPlayer: currentPlayerId,
