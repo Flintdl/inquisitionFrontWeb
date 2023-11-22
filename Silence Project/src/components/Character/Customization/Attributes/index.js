@@ -2,9 +2,10 @@ import { Info } from '@phosphor-icons/react';
 import React from 'react';
 
 import CustomTitles from '../../../_Global/Commons/Titles';
+import CharacterChart from '../../../Charts';
 
 function CustomizationRightBar({ props }) {
-  const { personsTest, pos } = props;
+  const { personsTest, pos, characterAttributes } = props;
 
   return (
     <nav className="hidden h-full w-auto flex-1 p-4 lg:flex">
@@ -19,7 +20,11 @@ function CustomizationRightBar({ props }) {
             customClass="!text-gray-300 font-Kanit"
           />
         </li>
-        <li className="flex h-[calc(100%-38px)] gap-2 overflow-y-auto p-1 scrollbar-thin scrollbar-track-gray-900/40 scrollbar-thumb-gray-500/40">
+        <li className="flex h-[calc(100%-38px)] flex-col gap-2 overflow-y-auto p-1 scrollbar-thin scrollbar-track-gray-900/40 scrollbar-thumb-gray-500/40">
+          <div className="flex max-h-[300px] justify-center">
+            <CharacterChart attributes={personsTest[pos].attributes} />
+          </div>
+
           <div className="flex flex-col gap-2">
             {personsTest[pos].info.attributes.map(
               ({ name, tier, description }, i) => (

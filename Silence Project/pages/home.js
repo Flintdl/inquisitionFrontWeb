@@ -16,9 +16,12 @@ import CustomTitles from '../src/components/_Global/Commons/Titles';
 import { useSoundAllowed } from '../contexts/SoundContext';
 import CharacterCustomization from '../src/components/Character/Customization';
 import Configurations from '../src/components/Configurations';
+import { useConfiguration } from '../contexts/ConfigurationContext';
+import CharacterChart from '../src/components/Charts';
 
 export default function HomePage() {
   const { soundAllowed, setSoundAllowed } = useSoundAllowed();
+  const { configuration, setConfiguration } = useConfiguration();
 
   const [loading, setLoading] = useState(true);
 
@@ -43,14 +46,14 @@ export default function HomePage() {
   const [openCreateMatch, setOpenCreateMatch] = useState(false);
   const [openAcceptSound, setOpenAcceptSound] = useState(true);
 
-  const [bgLobby, setBgLobby] = useState(3);
+  const [bgLobby, setBgLobby] = useState(4);
 
   const { socket, setSocket } = useSocket();
   const { messages, setMessages } = useMessage();
 
   const socketInitializer = async () => {
     await fetch('/api');
-    let sk = io('ws://192.168.33.118:3000', {
+    let sk = io('ws://localhost:3000', {
       transports: ['websocket'],
     });
 
@@ -103,7 +106,7 @@ export default function HomePage() {
   }
 
   return (
-    <ContentLobby bgLobby={bgLobby}>
+    <ContentLobby bgLobby={bgLobby} configuration={configuration}>
       <MenuLobby setBgLobby={setBgLobby} soundAllowed={soundAllowed} />
       <MiddleLobby
         actions={{
@@ -113,6 +116,7 @@ export default function HomePage() {
           setOpenConfiguration,
         }}
         permissions={{ soundAllowed }}
+        configuration={configuration}
       />
       <>
         {openServerFind && (
@@ -185,6 +189,7 @@ export default function HomePage() {
           <Configurations
             actions={{ setOpenConfiguration }}
             soundAllowed={soundAllowed}
+            configurationObj={{ configuration, setConfiguration }}
           />
         )}
       </>

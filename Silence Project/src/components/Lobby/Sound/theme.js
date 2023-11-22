@@ -1,14 +1,6 @@
 import { useEffect, useState } from 'react';
 import CustomTitles from '../../_Global/Commons/Titles';
-import {
-  Pause,
-  Play,
-  PlayPause,
-  SkipBack,
-  SkipForward,
-  SpeakerHigh,
-  SpeakerSlash,
-} from '@phosphor-icons/react';
+import { Pause, Play, SkipBack, SkipForward } from '@phosphor-icons/react';
 
 function LobbyThemeMusic({ props }) {
   const {
@@ -24,10 +16,23 @@ function LobbyThemeMusic({ props }) {
 
   const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
 
+  const [volume, setVolume] = useState(0.5);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
   const getRandomMusic = () => {
     const randomIndex = Math.floor(Math.random() * urls.length);
     return urls[randomIndex];
   };
+
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const formattedSeconds =
+      remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
 
   const handleVisibilityChange = () => {
     if (document.hidden) {
@@ -78,6 +83,13 @@ function LobbyThemeMusic({ props }) {
   };
 
   useEffect(() => {
+    const handleTimeUpdate = () => {
+      if (themeMusicLobby) {
+        setCurrentTime(themeMusicLobby.currentTime);
+        setDuration(themeMusicLobby.duration);
+      }
+    };
+
     if (themeMusicLobby === null) {
       const initialMusic = getRandomMusic();
       setCurrentMusicIndex(urls.indexOf(initialMusic));
@@ -91,6 +103,7 @@ function LobbyThemeMusic({ props }) {
       if (themeMusicLobby) {
         themeMusicLobby.play();
         themeMusicLobby.loop = false;
+        themeMusicLobby.volume = volume;
       }
     } else if (themeMusicLobby !== null) {
       themeMusicLobby.pause();
@@ -98,12 +111,18 @@ function LobbyThemeMusic({ props }) {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
+    if (themeMusicLobby) {
+      themeMusicLobby.addEventListener('timeupdate', handleTimeUpdate);
+    }
     // Remove o event listener quando o componente é desmontado
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (themeMusicLobby) {
+        themeMusicLobby.removeEventListener('timeupdate', handleTimeUpdate);
+      }
     };
-  }, [soundAllowed, themeMusicLobby, themeMusicLobbyPaused, urls]);
+  }, [soundAllowed, themeMusicLobby, themeMusicLobbyPaused, urls, volume]);
 
   useEffect(() => {
     return () => {
@@ -113,39 +132,82 @@ function LobbyThemeMusic({ props }) {
     };
   }, [themeMusicLobby]);
 
+  const handleProgressBarClick = (e) => {
+    if (themeMusicLobby) {
+      const progressBar = e.currentTarget;
+      const clickPosition =
+        e.clientX - progressBar.getBoundingClientRect().left;
+      const progressBarWidth = progressBar.clientWidth;
+      const newPosition = (clickPosition / progressBarWidth) * duration;
+
+      themeMusicLobby.currentTime = newPosition;
+    }
+  };
+
   return (
-    <div className="flex items-center gap-1">
-      <SkipBack
-        weight="fill"
-        onClick={playPreviousMusic}
-        className="cursor-pointer text-amber-600"
-      />
-      {themeMusicLobbyPaused && (
-        <Pause
+    <div className="flex flex-col items-center gap-1">
+      <div className="flex w-full items-center gap-1">
+        <CustomTitles
+          tag="p"
+          size={12}
+          pos="left"
+          text={themeActually}
+          customClass="!text-amber-400 font-KanitBold mr-auto"
+        />
+        <SkipBack
           weight="fill"
-          onClick={() => setThemeMusicLobbyPaused(!themeMusicLobbyPaused)}
+          onClick={playPreviousMusic}
           className="cursor-pointer text-amber-600"
         />
-      )}
-      {!themeMusicLobbyPaused && (
-        <Play
+        {themeMusicLobbyPaused && (
+          <Pause
+            weight="fill"
+            onClick={() => setThemeMusicLobbyPaused(!themeMusicLobbyPaused)}
+            className="cursor-pointer text-amber-600"
+          />
+        )}
+        {!themeMusicLobbyPaused && (
+          <Play
+            weight="fill"
+            onClick={() => setThemeMusicLobbyPaused(!themeMusicLobbyPaused)}
+            className="cursor-pointer text-amber-600"
+          />
+        )}
+        <SkipForward
           weight="fill"
-          onClick={() => setThemeMusicLobbyPaused(!themeMusicLobbyPaused)}
+          onClick={playNextMusic}
           className="cursor-pointer text-amber-600"
         />
-      )}
-      <SkipForward
-        weight="fill"
-        onClick={playNextMusic}
-        className="cursor-pointer text-amber-600"
-      />
-      <CustomTitles
-        tag="p"
-        size={12}
-        pos="left"
-        text={themeActually}
-        customClass="!text-amber-400 font-KanitBold"
-      />
+      </div>
+      <div className="flex items-center gap-1">
+        <span className="font-KanitRegular text-sm text-amber-600">0</span>
+        <input
+          type="range"
+          step={0.1}
+          value={volume}
+          onChange={(e) => setVolume(e.target.value)}
+          min={0}
+          max={1}
+          className="appearance-none bg-transparent [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/40 [&::-webkit-slider-thumb]:h-[8px] [&::-webkit-slider-thumb]:w-[8px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-amber-500"
+        />
+        <span className="font-KanitRegular text-sm text-amber-600">100</span>
+      </div>
+      <div className="flex w-full items-center justify-center gap-1">
+        <span className="block w-10 text-left font-KanitRegular text-sm text-amber-600">
+          {formatTime(currentTime)}
+        </span>
+        <span
+          className="relative h-2 flex-1 rounded-md bg-black"
+          onClick={handleProgressBarClick}>
+          <span
+            style={{ width: `${(currentTime / duration) * 100}%` }}
+            className="absolute left-0 top-0 h-2 rounded-md bg-amber-800"
+            onClick={handleProgressBarClick}></span>
+        </span>
+        <span className="block w-10 text-right font-KanitRegular text-sm text-amber-600">
+          {formatTime(duration)}
+        </span>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,8 @@
-import { SocketMessage } from "../contexts/MessageContex";
-import { SocketContext } from "../contexts/SocketContext";
-import { SoundAllowed } from "../contexts/SoundContext";
-import "../styles/global.css";
+import { Configuration } from '../contexts/ConfigurationContext';
+import { SocketMessage } from '../contexts/MessageContex';
+import { SocketContext } from '../contexts/SocketContext';
+import { SoundAllowed } from '../contexts/SoundContext';
+import '../styles/global.css';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -9,7 +10,9 @@ function MyApp({ Component, pageProps }) {
       <SocketContext>
         <SocketMessage>
           <SoundAllowed>
-            <Component {...pageProps} />
+            <Configuration>
+              <Component {...pageProps} />
+            </Configuration>
           </SoundAllowed>
         </SocketMessage>
       </SocketContext>

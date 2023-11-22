@@ -1,18 +1,10 @@
 import {
   ArrowFatLinesUp,
-  BluetoothConnected,
-  Cat,
   Coins,
-  CursorClick,
-  Gear,
-  Lightning,
-  Minus,
   Note,
   Plus,
   Question,
   SketchLogo,
-  SpeakerHigh,
-  SpeakerSlash,
   Users,
 } from '@phosphor-icons/react';
 import { useState } from 'react';
@@ -20,7 +12,6 @@ import { useState } from 'react';
 import logotype from '../../../../public/images/logotype.png';
 import profileImage from '../../../../public/images/miniature-1-1-mage-profile.png';
 import Image from 'next/image';
-import CustomTitles from '../../_Global/Commons/Titles';
 import LobbyThemeMusic from '../Sound/theme';
 
 function MenuLobby({ setBgLobby, soundAllowed }) {
@@ -133,7 +124,7 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
             </li>
           </ul>
           <div className="absolute left-4 top-full mt-2 flex items-center gap-4 rounded-full p-2 text-white">
-            <div className="flex items-center gap-2 rounded-md border border-amber-700/30 bg-amber-900/30 py-1 pl-1 pr-2 text-cyan-200 hover:opacity-70">
+            <div className="flex items-center gap-2 rounded-md border border-amber-700/30 bg-amber-900/30 px-1 py-1 text-cyan-200 hover:opacity-70">
               <LobbyThemeMusic
                 props={{
                   soundAllowed,

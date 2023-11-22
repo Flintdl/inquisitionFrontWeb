@@ -1,31 +1,56 @@
 import Image from 'next/image';
 import image04 from '../../public/images/match_backgrounds/background_match_option_01.png';
-import characterTest from '../../public/images/character_vampire_01.png';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSocket } from '../../contexts/SocketContext';
 import { io } from 'socket.io-client';
 import Loading from '../../src/components/_Global/Loading';
+import LobbyThemeMusic from '../../src/components/Lobby/Sound/theme';
+import { useSoundAllowed } from '../../contexts/SoundContext';
+import { AnimatePresence, motion } from 'framer-motion';
+
+import character01 from '../../public/images/characters/character_mermaid.png';
+import character02 from '../../public/images/characters/character_vampire.png';
+import character03 from '../../public/images/characters/character_villager.png';
+import character04 from '../../public/images/characters/character_witch.png';
+import { Check, CheckCircle } from '@phosphor-icons/react';
+import CustomButton from '../../src/components/_Global/Commons/Buttons';
 
 function MatchFastGame({ id }) {
   const { socket, setSocket } = useSocket();
   const [loading, setLoading] = useState(true);
+  const [positions, setPositions] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  const { soundAllowed } = useSoundAllowed();
+
+  const [themeMusicLobby, setThemeMusicLobby] = useState(null);
+  const [themeMusicLobbyPaused, setThemeMusicLobbyPaused] = useState(true);
+  const [themeActually, setThemeActually] = useState('');
+
+  const [youTurn, setYouTurn] = useState(false);
+  const [turnInfo, setTurnInfo] = useState({
+    currentPlayer: 'Nobody',
+    countdown: 15,
+  });
 
   const socketInitializer = async () => {
-    await fetch('/api');
-    let sk = io('ws://localhost:3000', {
-      transports: ['websocket'],
-    });
+    if (!socket) {
+      await fetch('/api');
+      let sk = io('ws://localhost:3000', {
+        transports: ['websocket'],
+      });
 
-    setSocket(sk);
+      setSocket(sk);
 
-    sk.on('connect', () => {
-      setLoading(false);
-    });
+      sk.on('connect', () => {
+        setLoading(false);
+      });
 
-    sk.on('room_users', (data) => {
-      console.log(data.users);
-    });
-    sk.emit('join_room', id);
+      sk.on('room_users', (data) => {
+        console.log(data.users);
+      });
+      sk.emit('join_room', id);
+    }
   };
 
   useEffect(() => {
@@ -35,22 +60,83 @@ function MatchFastGame({ id }) {
       }
     };
 
+    // Add event listeners
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     if (socket) {
-      socket.on('room_users', (data) => {
-        console.log(data.users);
-      });
+      const handleRoomUsers = (data) => {
+        setUsers(data.users);
+      };
+
+      const handleInitialPositions = (data) => {
+        setPositions(data.positions);
+      };
+
+      const handleGameStarted = () => {
+        console.log('start');
+      };
+
+      const handleInsufficientPlayers = () => {
+        console.log('insufficient_players');
+      };
+
+      const handleYourTurn = () => {
+        setYouTurn(true);
+      };
+
+      const handleTurnInfo = (data) => {
+        setTurnInfo({
+          currentPlayer: data.currentPlayer,
+          countdown: data.countdown,
+        });
+      };
+
+      const handleTurnOver = () => {
+        setYouTurn(false);
+      };
+
+      // Add Socket.IO event listeners
+      socket.on('room_users', handleRoomUsers);
+      socket.on('initial_positions', handleInitialPositions);
+      socket.on('game_started', handleGameStarted);
+      socket.on('insufficient_players', handleInsufficientPlayers);
+      socket.on('your_turn', handleYourTurn);
+      socket.on('turn_info', handleTurnInfo);
+      socket.on('turn_over', handleTurnOver);
+
+      // Emit Socket.IO events
       socket.emit('join_room', id);
       setLoading(false);
+      socket.emit('start_game', id);
     } else {
       socketInitializer();
     }
 
+    // Remove event listeners and clean up
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
+
+      handleBeforeUnload();
+
+      // Remove Socket.IO event listeners
+      if (socket) {
+        socket.off('room_users');
+        socket.off('initial_positions');
+        socket.off('game_started');
+        socket.off('insufficient_players');
+        socket.off('your_turn');
+        socket.off('turn_info');
+        socket.off('turn_over');
+      }
     };
   }, [socket, id]);
+
+  const characters = [
+    // { image: character01 },
+    { image: character02, name: 'Vampiro' },
+    { image: character03, name: 'Aldeão' },
+    { image: character04, name: 'Bruxa' },
+  ];
 
   if (loading) {
     return <Loading />;
@@ -71,112 +157,145 @@ function MatchFastGame({ id }) {
                   messagesRoom,
                 }}
               /> */}
-        <section className="flex h-full w-full gap-4">
+        <section className="relative flex h-full w-full gap-4 overflow-hidden">
+          <div className="absolute left-4 top-2 z-20 mt-2 flex items-center gap-4 rounded-full p-2 text-white">
+            <div className="flex items-center gap-2 rounded-md border border-amber-700/30 bg-amber-900/30 py-1 pl-1 pr-2 text-cyan-200 hover:opacity-70">
+              <LobbyThemeMusic
+                props={{
+                  soundAllowed,
+                  themeMusicLobby,
+                  setThemeMusicLobby,
+                  themeActually,
+                  setThemeActually,
+                  setThemeMusicLobbyPaused,
+                  themeMusicLobbyPaused,
+                  urls: [
+                    { name: 'Adventure', url: '/sounds/themes/Adventure.mp3' },
+                    { name: 'Chase', url: '/sounds/themes/Chase.mp3' },
+                    {
+                      name: 'ForestWalk',
+                      url: '/sounds/themes/ForestWalk.mp3',
+                    },
+                    { name: 'The Epic', url: '/sounds/themes/The_Epic.mp3' },
+                  ],
+                }}
+              />
+            </div>
+          </div>
           <div className="relative flex h-full w-full flex-col overflow-hidden p-4 font-Kanit text-white">
             <Image
               src={image04}
               title="Character Test"
               alt={`Character match`}
-              quality={100}
               fill={true}
               priority={true}
-              className="block h-auto w-full select-none !object-cover"
+              className="block h-auto w-full select-none !object-cover brightness-90"
             />
+            <p className="absolute left-[50%] top-12 -translate-x-[50%] rounded-lg bg-red-500 p-4 font-AntonRegular text-xl uppercase">
+              {youTurn ? 'You Turn' : turnInfo.currentPlayer}
+            </p>
+            <p className="absolute left-[50%] top-32 -translate-x-[50%] rounded-lg bg-purple-500 p-4 font-AntonRegular text-xl uppercase">
+              {turnInfo.countdown}
+            </p>
             <ul
               style={{
                 position: 'relative',
-                width: '1080px',
+                width: '880px',
                 height: '300px',
               }}
-              className="relative z-10 mx-auto mb-20 mt-auto flex h-full items-end justify-center">
-              {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
-                const qual = () => {
-                  switch (i) {
-                    case 0:
-                      return {
-                        transform:
-                          'translateY(60px) translateX(100px) rotateY(180deg)',
-                        zIndex: 4,
-                      };
-                    case 1:
-                      return {
-                        transform:
-                          'translateY(30px) translateX(50px) rotateY(180deg)',
-                        zIndex: 3,
-                      };
-                    case 2:
-                      return {
-                        transform:
-                          'translateY(0px) translateX(0px) rotateY(180deg)',
-                        zIndex: 2,
-                      };
-                    case 3:
-                      return {
-                        transform:
-                          'translateY(-10px) translateX(-40px) rotateY(180deg)',
-                        zIndex: 1,
-                      };
-                    case 4:
-                      return {
-                        transform:
-                          'translateY(-12px) translateX(-60px) rotateY(0deg)',
-                        zIndex: i,
-                      };
-                    case 5:
-                      return {
-                        transform:
-                          'translateY(-14px) translateX(-70px) rotateY(0deg)',
-                        zIndex: i,
-                      };
-                    case 6:
-                      return {
-                        transform:
-                          'translateY(0px) translateX(-110px) rotateY(0deg)',
-                        zIndex: i,
-                      };
-                    case 7:
-                      return {
-                        transform:
-                          'translateY(20px) translateX(-150px) rotateY(0deg)',
-                        zIndex: i,
-                      };
-                    case 8:
-                      return {
-                        transform:
-                          'translateY(-12px) translateX(-100px) rotateY(0deg)',
-                        zIndex: i,
-                      };
-                  }
-                };
+              className="relative z-10 mx-auto mb-20 mt-auto flex h-full max-w-[90%] items-end justify-center">
+              {users.map(({ id }, i) => {
+                const characterIndex = i % characters.length;
+                const character = characters[characterIndex];
+                const position = positions[i]; // Use a posição correspondente
+
                 return (
                   <li
                     key={i}
-                    style={qual()}
-                    className="relative flex h-[250px] w-[200px] flex-col items-center justify-center gap-1 p-1">
-                    {/* <p className="font-KanitBold text-sm text-white">
-                            {id}
-                          </p> */}
+                    style={position}
+                    className={`relative flex h-[250px] w-[200px] flex-col items-center justify-center gap-1 p-1`}>
+                    <span className="absolute -top-8 whitespace-nowrap rounded-lg bg-black/40 px-2 py-1 font-AntonRegular uppercase text-gray-300">
+                      {id}
+                      {id === socket.id && (
+                        <span className="text-purple-500"> (você)</span>
+                      )}
+                    </span>
                     <div
-                      className="relative h-full w-full"
-                      style={{ transform: `translateY(${i}%)` }}>
-                      <Image
-                        src={characterTest}
-                        title="Character Test"
-                        alt="Character Test"
-                        fill={true}
-                        priority={true}
-                        className="block h-auto w-fit select-none !object-contain xl:!object-cover"
-                      />
+                      className={`relative h-full w-full drop-shadow-[16px_-16px_4px_rgba(0,0,0,.5)] `}>
+                      <span
+                        className={`h-full w-full ${
+                          id === turnInfo.currentPlayer
+                            ? 'drop-shadow-[0_0px_2px_rgba(255,255,255,1)]'
+                            : 'drop-shadow-[0_0px_2px_rgba(0,0,0,1)]'
+                        }`}>
+                        <Image
+                          src={character.image}
+                          alt={`Character ${i + 1}`}
+                          width={400}
+                          height={300}
+                          priority={true}
+                          quality={100}
+                          className="left-0 top-0 block h-auto w-fit select-none brightness-90"
+                        />
+                      </span>
                     </div>
                   </li>
                 );
               })}
             </ul>
           </div>
+          <AnimatePresence>
+            {youTurn && (
+              <motion.aside
+                initial={{ x: '110%' }}
+                animate={{ x: '-24px' }}
+                exit={{ x: '110%' }}
+                className="absolute right-0 top-6 z-10 flex h-[calc(100%-48px)] w-[500px] flex-col gap-4 rounded-lg border-2 border-white/20 p-4 text-white backdrop-blur-md">
+                <div className="flex flex-col rounded-lg bg-black/60 p-4">
+                  <p className="text-center font-KanitBold text-lg uppercase">
+                    Você é um{' '}
+                    <span className="text-blue-600">
+                      {'<'}NOME FUNÇÃO{'>'}
+                    </span>
+                  </p>
+                </div>
+                <ul className="grid grid-cols-6 gap-4">
+                  {[0, 1, 2, 3].map((idx) => (
+                    <li
+                      className={`relative col-span-3 flex h-48 justify-center overflow-hidden rounded-lg border-2 bg-black/50 p-4 ${
+                        idx === 0 ? 'border-green-600' : 'border-gray-600'
+                      }`}>
+                      <p className="text-center font-KanitBold text-lg uppercase">
+                        {idx === 0 && (
+                          <CheckCircle
+                            className="absolute -right-3 -top-3 text-green-600"
+                            weight="fill"
+                            size={32}
+                          />
+                        )}
+                        USUÁRIO {idx}
+                      </p>
+                      <div className="absolute left-0 top-48 h-full w-full scale-[2.5]">
+                        <Image
+                          src={character02}
+                          alt={`Character ${idx}`}
+                          priority={true}
+                          fill={true}
+                          quality={100}
+                          className="left-0 block h-auto w-fit select-none !object-contain brightness-90"
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-auto flex w-full justify-end">
+                  <CustomButton title="CONFIRMAR VOTO" color="secondary" />
+                </div>
+              </motion.aside>
+            )}
+          </AnimatePresence>
         </section>
-        <aside className="absolute right-0 top-0 z-10 h-full w-12 rounded-md bg-slate-900">
-          a
-        </aside>
       </MatchContent>
     </>
   );

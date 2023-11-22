@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import CustomDialog from '../_Global/Dialog';
 import CustomTitles from '../_Global/Commons/Titles';
 
-function Configurations({ actions, soundAllowed }) {
+function Configurations({ actions, soundAllowed, configurationObj }) {
   const { setOpenConfiguration } = actions;
+  const { configuration, setConfiguration } = configurationObj;
 
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -48,14 +49,29 @@ function Configurations({ actions, soundAllowed }) {
                 />
                 <select
                   id="countries"
+                  onChange={(e) =>
+                    setConfiguration((prevState) => {
+                      return { ...prevState, graphics: Number(e.target.value) };
+                    })
+                  }
+                  value={configuration.graphics}
                   class="block rounded-lg border border-white/20 bg-transparent px-2 py-1 font-KanitBold text-sm text-gray-400 placeholder-black backdrop-blur-sm focus:border-blue-500 focus:ring-blue-500">
-                  <option className="text-gray-700" selected value="full">
+                  <option
+                    className="text-gray-700"
+                    selected={configuration.graphics === 2}
+                    value={2}>
                     ALTO
                   </option>
-                  <option className="text-gray-700" value="window">
+                  <option
+                    className="text-gray-700"
+                    selected={configuration.graphics === 1}
+                    value={1}>
                     MÉDIO
                   </option>
-                  <option className="text-gray-700" value="window_full">
+                  <option
+                    className="text-gray-700"
+                    selected={configuration.graphics === 0}
+                    value={0}>
                     BAIXO
                   </option>
                 </select>

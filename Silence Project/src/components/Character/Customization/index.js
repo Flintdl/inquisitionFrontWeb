@@ -24,6 +24,19 @@ const personsTest = [
     name: 'Vampiro',
     image: characterVampire,
     bg: bgVampire,
+    attributes: {
+      Sobrenatural: {
+        ManipulaçãoSombria: 52,
+        ControleMental: 45,
+        AgilidadeNoturna: 45,
+      },
+      Físico: {
+        Força: 18,
+        Agilidade: 15,
+        Vitalidade: 35,
+        Destreza: 33,
+      },
+    },
     info: {
       name: 'Aldon Moterasu',
       biography: [
@@ -69,6 +82,20 @@ const personsTest = [
     name: 'Bruxa',
     image: characterWitch,
     bg: bgMage,
+    attributes: {
+      Mágico: {
+        ManipulaçãoSombria: 32,
+        ConexãoNatureza: 65,
+        RituaisMísticos: 45,
+        SabedoriaArcana: 35,
+      },
+      Físico: {
+        Força: 38,
+        Agilidade: 25,
+        Vitalidade: 65,
+        Destreza: 23,
+      },
+    },
     info: {
       name: 'Kanit Zoterus',
       biography: [
@@ -108,6 +135,20 @@ const personsTest = [
     name: 'Aldeão',
     image: characterVillager,
     bg: bgVillager,
+    attributes: {
+      Habilidades: {
+        Agricultura: 52,
+        Hospitalidade: 45,
+        LiderançaComunitária: 45,
+        ConhecimentoFloresta: 45,
+      },
+      Físico: {
+        Força: 18,
+        Agilidade: 15,
+        Vitalidade: 35,
+        Destreza: 33,
+      },
+    },
     info: {
       name: 'Lucas Ardent',
       biography: [
@@ -153,6 +194,21 @@ const personsTest = [
     name: 'Sereia',
     image: characterMermaid,
     bg: bgMermaid,
+    attributes: {
+      Mágico: {
+        EncantoMarinho: 52,
+        GuardiãDasÁguas: 45,
+        ManipulaçãoMarés: 45,
+        ComunicaçãoAquática: 45,
+        TempestadeAquática: 45,
+      },
+      Físico: {
+        Força: 18,
+        Agilidade: 15,
+        Vitalidade: 35,
+        Destreza: 33,
+      },
+    },
     info: {
       name: 'Nerida Maris',
       biography: [

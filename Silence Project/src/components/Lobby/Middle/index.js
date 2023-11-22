@@ -3,7 +3,7 @@ import characterTest from '../../../../public/images/characters/character_villag
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 
-function MiddleLobby({ actions, permissions }) {
+function MiddleLobby({ actions, permissions, configuration }) {
   const {
     setOpenServerFind,
     setOpenCreateMatch,
@@ -126,6 +126,19 @@ function MiddleLobby({ actions, permissions }) {
     },
   ];
 
+  const graphic = () => {
+    switch (configuration.graphics) {
+      case 0:
+        return 10;
+      case 1:
+        return 50;
+      case 2:
+        return 100;
+      default:
+        return 100;
+    }
+  };
+
   return (
     <section className="grid h-full grid-cols-12 pb-16 pt-32">
       <div className="col-span-4 flex flex-col">
@@ -162,6 +175,7 @@ function MiddleLobby({ actions, permissions }) {
             title="Character Test"
             alt="Character Test"
             fill={true}
+            quality={graphic()}
             priority={true}
             className="block h-auto w-fit select-none !object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,1)]"
           />
