@@ -52,8 +52,7 @@ export default function HomePage() {
   const { messages, setMessages } = useMessage();
 
   const socketInitializer = async () => {
-    await fetch('/api');
-    let sk = io('ws://localhost:3000', {
+    let sk = io('ws://localhost:3001', {
       transports: ['websocket'],
     });
 

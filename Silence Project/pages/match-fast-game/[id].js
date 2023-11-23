@@ -56,7 +56,7 @@ function MatchFastGame({ id }) {
   const socketInitializer = async () => {
     if (!socket) {
       await fetch('/api');
-      let sk = io('ws://localhost:3000', {
+      let sk = io('ws://localhost:3001', {
         transports: ['websocket'],
       });
 
