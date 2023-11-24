@@ -1,23 +1,16 @@
-import { useEffect, useState } from "react";
-import CustomButton from "../../_Global/Commons/Buttons";
-import CustomTitles from "../../_Global/Commons/Titles";
-import CustomDialog from "../../_Global/Dialog";
-import { ArrowFatLeft } from "@phosphor-icons/react";
-import { useSocket } from "../../../../contexts/SocketContext";
-import { useMessage } from "../../../../contexts/MessageContex";
-import MessageContainer from "../../_Global/Messages";
-import { useRouter } from "next/router";
+import { useEffect, useState } from 'react';
+import CustomButton from '../../_Global/Commons/Buttons';
+import CustomTitles from '../../_Global/Commons/Titles';
+import CustomDialog from '../../_Global/Dialog';
+import { ArrowFatLeft } from '@phosphor-icons/react';
+import { useSocket } from '../../../../contexts/SocketContext';
+import { useMessage } from '../../../../contexts/MessageContex';
+import MessageContainer from '../../_Global/Messages';
+import { useRouter } from 'next/router';
 
 function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
   const { setOpenCreateMatch } = actions;
-  const {
-    rooms,
-    setRooms,
-    roomActive,
-    setRoomActive,
-    usersRoom,
-    setUsersRoom,
-  } = roomsList;
+  const { roomActive, setRoomActive, usersRoom, setUsersRoom } = roomsList;
 
   const { socket } = useSocket();
   const [turn, setTurn] = useState(false);
@@ -32,8 +25,7 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
 
   const handleQuickMatch = () => {
     const idM = Math.random().toString(36).substr(2, 9);
-    setRooms((prevState) => [...prevState, { roomID: idM }]);
-    socket.emit("create_room", idM); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
+    socket.emit('create_room', idM); // Emitir mensagem para o servidor para entrar em uma sala de partida rápida
     setRoomActive(idM);
     router.push(`/match-fast-game/${idM}`);
     // socket.emit("start_game");
@@ -42,25 +34,25 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
   useEffect(() => {
     console.log(socket);
 
-    socket.emit("request_users");
+    socket.emit('request_users');
 
-    socket.on("room_users", (data) => {
+    socket.on('room_users', (data) => {
       setUsersRoom(data.users);
       console.log(data.users);
     });
-    socket.on("insufficient_players", () => {
-      console.log("insufficient_players");
+    socket.on('insufficient_players', () => {
+      console.log('insufficient_players');
     });
 
-    socket.on("your_turn", () => {
-      console.log("your_turn");
+    socket.on('your_turn', () => {
+      console.log('your_turn');
       setTurn(true);
     });
-    socket.on("turn_over", () => {
-      console.log("turn_over");
+    socket.on('turn_over', () => {
+      console.log('turn_over');
       setTurn(false);
     });
-    socket.on("turn_info", (data) => {
+    socket.on('turn_info', (data) => {
       setCount(data.countdown);
       const countdownInterval = setInterval(() => {
         data.countdown--; // Decrementa o contador
@@ -71,7 +63,7 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
         }
       }, 1000);
     });
-    socket.on("result_users", (data) => {
+    socket.on('result_users', (data) => {
       setFriends(data);
     });
   }, []);
@@ -81,12 +73,11 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
       {!roomActive && (
         <CustomDialog
           title={`${
-            loadingFriendMatch ? "Selecione seus amigos" : "Criar Sala"
+            loadingFriendMatch ? 'Selecione seus amigos' : 'Criar Sala'
           }`}
           close={setOpenCreateMatch}
           size="md"
-          soundAllowed={soundAllowed}
-        >
+          soundAllowed={soundAllowed}>
           <section>
             {!loadingFriendMatch ? (
               <>
@@ -96,8 +87,6 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
                   pos="left"
                   text="Você pode criar tanto uma partida com os amigos, quanto uma partida rápida, sem configurações, experimente e divirta-se da forma que você acha melhor!"
                 />
-                Rooms: {JSON.stringify(rooms)} <br />
-                Ativo: {JSON.stringify(roomActive)}
                 {/* {turn && (
                 <div className="mt-3 flex items-center rounded-md border-2 bg-cyan-500 p-2">
                   <CustomTitles
@@ -171,8 +160,7 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
                     return (
                       <li
                         key={id}
-                        className="flex items-center justify-between gap-2 rounded-md bg-white/40 p-2"
-                      >
+                        className="flex items-center justify-between gap-2 rounded-md bg-white/40 p-2">
                         <CustomTitles
                           tag="p"
                           size={14}
@@ -196,8 +184,7 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
             {loadingFriendMatch && (
               <div
                 className="flex w-fit cursor-pointer items-center gap-1 transition-all hover:gap-2"
-                onClick={() => setLoadingFriendMatch(false)}
-              >
+                onClick={() => setLoadingFriendMatch(false)}>
                 <ArrowFatLeft
                   weight="duotone"
                   size={24}

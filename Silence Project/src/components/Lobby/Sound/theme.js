@@ -126,8 +126,6 @@ function LobbyThemeMusic({ props }) {
 
   useEffect(() => {
     return () => {
-      console.log('saiu');
-      console.log(themeMusicLobby);
       if (themeMusicLobby) themeMusicLobby.pause();
     };
   }, [themeMusicLobby]);

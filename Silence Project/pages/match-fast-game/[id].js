@@ -12,12 +12,28 @@ import character01 from '../../public/images/characters/character_mermaid.png';
 import character02 from '../../public/images/characters/character_vampire.png';
 import character03 from '../../public/images/characters/character_villager.png';
 import character04 from '../../public/images/characters/character_witch.png';
-import { Check, CheckCircle } from '@phosphor-icons/react';
+import {
+  ArrowFatLeft,
+  Cat,
+  Check,
+  CheckCircle,
+  List,
+} from '@phosphor-icons/react';
 import CustomButton from '../../src/components/_Global/Commons/Buttons';
+import CustomTitles from '../../src/components/_Global/Commons/Titles';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 function MatchFastGame({ id }) {
   const { socket, setSocket } = useSocket();
+
+  const router = useRouter();
+
   const [loading, setLoading] = useState(true);
+
+  const [openInfoMenu, setOpenInfoMenu] = useState(false);
+
+  const [roomInfo, setRoomInfo] = useState({});
   const [positions, setPositions] = useState([]);
   const [users, setUsers] = useState([]);
 
@@ -27,11 +43,6 @@ function MatchFastGame({ id }) {
   const [themeMusicLobbyPaused, setThemeMusicLobbyPaused] = useState(true);
   const [themeActually, setThemeActually] = useState('');
 
-  const [audioClock, setAudioClock] = useState(
-    '/sounds/clock-ticking-time.mp3',
-  );
-  const [audioTurn, setAudioTurn] = useState('/sounds/you_turn.mp3');
-
   const [youTurn, setYouTurn] = useState(false);
   const [turnInfo, setTurnInfo] = useState({
     currentPlayer: 'Nobody',
@@ -40,16 +51,18 @@ function MatchFastGame({ id }) {
 
   const playTimeSound = () => {
     if (soundAllowed && soundAllowed === 'allowed') {
-      if (!audioClock.paused) {
-        // Se o áudio estiver em execução, pause
-        audioClock.pause();
-      } else {
-        // Se não estiver em execução, execute
-        audioTurn.play();
-        audioTurn.volume = 0.8;
-        audioClock.play();
-        audioClock.volume = 0.1;
-      }
+      const clock = new Audio('/sounds/clock-ticking-time.mp3');
+      const turn = new Audio('/sounds/you_turn.mp3');
+      // Se não estiver em execução, execute
+      turn.play();
+      turn.volume = 0.8;
+      clock.play();
+      clock.volume = 0.1;
+
+      setTimeout(() => {
+        turn.pause();
+        clock.pause();
+      }, 6000);
     }
   };
 
@@ -79,7 +92,17 @@ function MatchFastGame({ id }) {
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (socket) {
-        socket.emit('leave_room', id);
+        socket.emit('leave_room', {
+          roomName: roomInfo.roomID,
+          user: socket.id,
+        });
+        socket.off('room_users');
+        socket.off('initial_positions');
+        socket.off('game_started');
+        socket.off('insufficient_players');
+        socket.off('your_turn');
+        socket.off('turn_info');
+        socket.off('turn_over');
       }
     };
 
@@ -88,19 +111,21 @@ function MatchFastGame({ id }) {
 
     if (socket) {
       const handleRoomUsers = (data) => {
-        setUsers(data.users);
-      };
-
-      const handleInitialPositions = (data) => {
-        setPositions(data.positions);
+        console.log(data);
+        setRoomInfo(data.existingRoom);
+        setUsers(data.existingRoom.users);
+        setPositions(data.existingRoom.positions);
       };
 
       const handleGameStarted = () => {
-        console.log('start');
+        setRoomInfo((prevState) => {
+          return { ...prevState, startGame: true };
+        });
       };
 
-      const handleInsufficientPlayers = () => {
-        console.log('insufficient_players');
+      const handleInsufficientPlayers = (size) => {
+        console.log(size);
+        alert(`Jogadores insuficientes: ${size.size} de 3`);
       };
 
       const handleYourTurn = () => {
@@ -116,23 +141,36 @@ function MatchFastGame({ id }) {
       };
 
       const handleTurnOver = () => {
-        playTimeSound();
         setYouTurn(false);
       };
 
       // Add Socket.IO event listeners
       socket.on('room_users', handleRoomUsers);
-      socket.on('initial_positions', handleInitialPositions);
+
       socket.on('game_started', handleGameStarted);
       socket.on('insufficient_players', handleInsufficientPlayers);
+
       socket.on('your_turn', handleYourTurn);
       socket.on('turn_info', handleTurnInfo);
       socket.on('turn_over', handleTurnOver);
 
+      // Exit room
+
+      socket.on('success_leave_room', (permission) => {
+        console.log(permission);
+        if (permission) {
+          console.log('perm');
+          console.log(router);
+          router.push('/home');
+        }
+      });
+
+      // Exit room
+
       // Emit Socket.IO events
+      socket.emit('join_room_me', id);
       socket.emit('join_room', id);
       setLoading(false);
-      socket.emit('start_game', id);
     } else {
       socketInitializer();
     }
@@ -140,21 +178,12 @@ function MatchFastGame({ id }) {
     // Remove event listeners and clean up
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-
-      handleBeforeUnload();
-
-      // Remove Socket.IO event listeners
-      if (socket) {
-        socket.off('room_users');
-        socket.off('initial_positions');
-        socket.off('game_started');
-        socket.off('insufficient_players');
-        socket.off('your_turn');
-        socket.off('turn_info');
-        socket.off('turn_over');
-      }
     };
   }, [socket, id]);
+
+  const startGame = () => {
+    socket.emit('start_game', id);
+  };
 
   const characters = [
     // { image: character01 },
@@ -170,22 +199,25 @@ function MatchFastGame({ id }) {
   return (
     <>
       <MatchContent>
-        {/* <MatchLeftMenu
-                props={{
-                  socket,
-                  setRoomActive,
-                  roomActive,
-                  usersRoom,
-                  messageInput,
-                  setMessageInput,
-                  sendMessage,
-                  messagesRoom,
-                }}
-              /> */}
+        <Head>
+          <title>SL | Match</title>
+        </Head>
+        <AnimatePresence>
+          {openInfoMenu && (
+            <MatchLeftMenu
+              props={{
+                socket,
+                roomInfo,
+                openInfoMenu,
+                setOpenInfoMenu,
+              }}
+            />
+          )}
+        </AnimatePresence>
         <section className="relative flex h-full w-full gap-4 overflow-hidden">
           <div className="absolute left-4 top-2 z-20 mt-2 flex items-center gap-4 rounded-full p-2 text-white">
             <div className="flex items-center gap-2 rounded-md border border-amber-700/30 bg-amber-900/30 py-1 pl-1 pr-2 text-cyan-200 hover:opacity-70">
-              <LobbyThemeMusic
+              {/* <LobbyThemeMusic
                 props={{
                   soundAllowed,
                   themeMusicLobby,
@@ -204,7 +236,7 @@ function MatchFastGame({ id }) {
                     { name: 'The Epic', url: '/sounds/themes/The_Epic.mp3' },
                   ],
                 }}
-              />
+              /> */}
             </div>
           </div>
           <div className="relative flex h-full w-full flex-col overflow-hidden p-4 font-Kanit text-white">
@@ -212,23 +244,50 @@ function MatchFastGame({ id }) {
               src={image04}
               alt="bgLobbyMatch"
               fill={true}
+              quality={100}
               priority={true}
-              className="block h-auto w-full select-none !object-cover brightness-90"
+              className="block h-auto w-full select-none !object-cover"
             />
-            <p className="absolute left-[50%] top-12 w-44 -translate-x-[50%] rounded-lg border-2 border-white/20 p-4 text-center font-AntonRegular text-xl uppercase italic backdrop-blur-md">
-              {youTurn ? 'Sua vez de votar' : 'Espere a sua vez'}
-            </p>
-            <p className="absolute left-[50%] top-32 -translate-x-[50%] rounded-lg bg-purple-500 p-4 font-AntonRegular text-xl uppercase">
-              {turnInfo.countdown}
-            </p>
+            <div className="absolute left-6 top-12 flex gap-4">
+              <p
+                onClick={() => setOpenInfoMenu(!openInfoMenu)}
+                className="text-md w-fit cursor-pointer rounded-lg border-2 border-white/20 p-2 text-center font-AntonRegular backdrop-blur-md hover:opacity-70">
+                <List size={24} weight="bold" />
+              </p>
+              <p className="flex items-center rounded-lg border-2 border-white/20 p-2 text-center font-AntonRegular text-sm uppercase italic backdrop-blur-md">
+                HOST: {roomInfo.hostID}
+              </p>
+            </div>
+            <div className="absolute left-[50%] top-12 flex -translate-x-[50%] flex-col items-center gap-6">
+              <p className="text-md w-44 rounded-lg border-2 border-white/20 p-4 text-center font-AntonRegular uppercase italic backdrop-blur-md">
+                {roomInfo.startGame
+                  ? youTurn
+                    ? 'Sua vez de votar'
+                    : 'Espere a sua vez'
+                  : 'Esperando o Host'}
+              </p>
+              {roomInfo.startGame && (
+                <p className="rounded-lg bg-purple-500 p-4 font-AntonRegular text-xl uppercase">
+                  {turnInfo.countdown}
+                </p>
+              )}
+              {!roomInfo.startGame && roomInfo.hostID === socket.id && (
+                <CustomButton
+                  title="INICIAR O JOGO"
+                  color="danger"
+                  action={{ onClick: () => startGame() }}
+                />
+              )}
+            </div>
             <ul
               style={{
                 position: 'relative',
-                width: '880px',
+                width: '1100px',
                 height: '300px',
               }}
               className="relative z-10 mx-auto mb-20 mt-auto flex h-full max-w-[90%] items-end justify-center">
-              {users.map(({ id }, i) => {
+              {Array.from({ length: roomInfo.maxUsers }).map((_, i) => {
+                const user = roomInfo.users[i]; // Obtenha o usuário correspondente (se existir)
                 const characterIndex = i % characters.length;
                 const character = characters[characterIndex];
                 const position = positions[i]; // Use a posição correspondente
@@ -237,30 +296,58 @@ function MatchFastGame({ id }) {
                   <li
                     key={i}
                     style={position}
-                    className={`relative flex h-[250px] w-[200px] flex-col items-center justify-center gap-1 p-1`}>
+                    className={`absolute flex h-[250px] w-[150px] flex-col items-center justify-center gap-1 p-1`}>
+                    {i}
                     <span className="absolute -top-8 whitespace-nowrap rounded-lg bg-black/40 px-2 py-1 font-AntonRegular uppercase text-gray-300">
-                      {id}
-                      {id === socket.id && (
-                        <span className="text-purple-500"> (você)</span>
+                      {user && (
+                        <>
+                          {user.id}
+                          {user.id === socket.id && (
+                            <span className="text-purple-500"> (você)</span>
+                          )}
+                        </>
                       )}
+                      {!user && 'Aguardando usuário'}
                     </span>
                     <div
-                      className={`relative h-full w-full drop-shadow-[16px_-16px_4px_rgba(0,0,0,.5)] `}>
+                      className={`relative h-full w-full ${
+                        user
+                          ? 'drop-shadow-[16px_-16px_4px_rgba(0,0,0,.5)]'
+                          : ''
+                      }`}>
                       <span
                         className={`h-full w-full ${
-                          id === socket.id
-                            ? 'drop-shadow-[0_0px_2px_rgba(255,255,255,1)]'
-                            : 'drop-shadow-[0_0px_2px_rgba(0,0,0,1)]'
+                          user
+                            ? user.id === socket.id
+                              ? 'drop-shadow-[0_0px_2px_rgba(255,255,255,1)]'
+                              : 'drop-shadow-[0_0px_2px_rgba(0,0,0,1)]'
+                            : 'drop-shadow-[0_0px_2px_rgba(255,255,255,1)]'
                         }`}>
-                        <Image
-                          src={character.image}
-                          alt={`Character ${i + 1}`}
-                          width={400}
-                          height={300}
-                          priority={true}
-                          quality={100}
-                          className="left-0 top-0 block h-auto w-fit select-none brightness-90"
-                        />
+                        {user && (
+                          <Image
+                            src={
+                              user.id === socket.id
+                                ? character.image
+                                : character03
+                            }
+                            alt={`Character ${i + 1}`}
+                            width={300}
+                            height={200}
+                            quality={100}
+                            className="left-0 top-0 block h-auto w-fit select-none brightness-90"
+                          />
+                        )}
+                        {!user && (
+                          // Renderize algo para indicar que o slot está vazio
+                          <Image
+                            src={character03}
+                            alt={`Character ${i + 1}`}
+                            width={300}
+                            height={200}
+                            quality={100}
+                            className="bh-white left-0 top-0 block h-auto w-fit select-none brightness-0"
+                          />
+                        )}
                       </span>
                     </div>
                   </li>
@@ -286,6 +373,7 @@ function MatchFastGame({ id }) {
                 <ul className="grid grid-cols-6 gap-4">
                   {[0, 1, 2, 3].map((idx) => (
                     <li
+                      key={idx}
                       className={`relative col-span-3 flex h-48 justify-center overflow-hidden rounded-lg border-2 bg-black/50 p-4 ${
                         idx === 0 ? 'border-green-600' : 'border-gray-600'
                       }`}>
@@ -345,24 +433,26 @@ const MatchContent = ({ children }) => {
 };
 
 const MatchLeftMenu = ({ props }) => {
-  const {
-    socket,
-    setRoomActive,
-    roomActive,
-    usersRoom,
-    messageInput,
-    setMessageInput,
-    sendMessage,
-    messagesRoom,
-  } = props;
+  const { socket, roomInfo, openInfoMenu, setOpenInfoMenu } = props;
   return (
-    <aside className="col-span-3 flex h-full flex-col gap-4">
+    <motion.aside
+      initial={{ x: '-130%' }}
+      animate={{ x: '0px' }}
+      exit={{ x: '-130%' }}
+      className="fixed left-6 top-6 z-30 flex h-[calc(100%-48px)] w-[400px] flex-col gap-4 rounded-lg border-2 border-black/40 bg-black/40 p-4 text-white backdrop-blur-lg">
+      <p
+        onClick={() => setOpenInfoMenu(!openInfoMenu)}
+        className="text-md absolute -right-16 top-0 w-fit cursor-pointer rounded-lg border-2 border-black/40 bg-black/40 p-2 text-center font-AntonRegular backdrop-blur-md hover:opacity-70">
+        <List size={24} weight="bold" />
+      </p>
       <nav className="flex w-full items-center justify-between gap-2 rounded-md bg-slate-800 p-2">
         <div
           className="flex w-fit cursor-pointer items-center gap-1 transition-all hover:gap-2"
           onClick={() => {
-            socket.emit('leave_room', roomActive);
-            setRoomActive(null);
+            socket.emit('leave_room', {
+              roomName: roomInfo.roomID,
+              user: socket.id,
+            });
           }}>
           <ArrowFatLeft weight="duotone" size={24} className="text-cyan-500" />
           <CustomTitles
@@ -373,93 +463,22 @@ const MatchLeftMenu = ({ props }) => {
             customClass="!text-cyan-500"
           />
         </div>
-        <div
-          className="flex w-fit cursor-pointer items-center gap-1 transition-all hover:gap-2"
-          onClick={() => {
-            socket.emit('teste_sala', roomActive);
-          }}>
-          <CustomTitles
-            tag="h5"
-            size={14}
-            pos="left"
-            text="Sinal to na sala"
-            customClass="!text-red-500"
-          />
-        </div>
       </nav>
       <ul className="grid grid-cols-12 gap-2">
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => {
+        {roomInfo?.users?.map(({ id }, i) => {
           return (
             <li
               key={i}
-              className="col-span-2 flex flex-col items-center justify-center gap-1 rounded-md border-2 border-slate-500/50 bg-slate-800/50 p-1 text-green-500">
-              {i !== 11 && i !== 9 && <Cat size={24} weight="fill" />}
-
+              className="col-span-12 flex flex-grow flex-col gap-1 rounded-md border-2 border-slate-500/50 bg-slate-800/50 p-1 text-green-500">
               <p className="font-KanitRegular text-sm text-gray-300">
-                {i !== 11 && i !== 9 ? 'Vampiro' : '?'}
+                Usuário: {id}
               </p>
             </li>
           );
         })}
       </ul>
-      <div className="flex h-full gap-2">
-        {/* <CustomTitles
-          tag="h5"
-          size={14}
-          pos="left"
-          text="Usuários na sala"
-          customClass="!text-green-500"
-        /> */}
-        {/* <ul className="flex max-h-[150px] min-h-[150px] flex-col">
-          {usersRoom?.map(({ id }) => {
-            return (
-              <li key={id}>
-                <CustomTitles
-                  tag="p"
-                  size={14}
-                  pos="left"
-                  text={`ID: ${id}`}
-                  customClass="!text-white font-KanitRegular"
-                />
-              </li>
-            );
-          })}
-        </ul> */}
-
-        <div className="relative flex h-full w-full flex-col gap-4 rounded-md bg-slate-800 p-2">
-          <ul className="absolute flex h-[calc(100%-84px)] w-[calc(100%-16px)] flex-col overflow-auto rounded-md bg-slate-900 p-2 font-Kanit text-white scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-gray-500">
-            {messagesRoom?.map(({ id, message }, i) => {
-              return (
-                <li key={i} className="flex flex-col">
-                  <p className="font-KanitBold text-purple-500">{id} (mudo)</p>
-                  <p>{message}</p>
-                </li>
-              );
-            })}
-          </ul>
-          <div className="mt-auto flex gap-2 rounded-md bg-slate-600 p-2">
-            <input
-              value={messageInput}
-              placeholder="Digite a sua mensagem"
-              className="w-full rounded-md border-2 border-cyan-500 px-2 font-KanitBold text-cyan-500"
-              onChange={(e) => setMessageInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') sendMessage();
-              }}
-            />
-            <CustomButton
-              title="Enviar"
-              color="primary"
-              action={{
-                onClick: () => {
-                  sendMessage();
-                },
-              }}
-            />
-          </div>
-        </div>
-      </div>
-    </aside>
+      {/* <Menu */}
+    </motion.aside>
   );
 };
 

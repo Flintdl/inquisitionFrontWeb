@@ -18,6 +18,7 @@ import CharacterCustomization from '../src/components/Character/Customization';
 import Configurations from '../src/components/Configurations';
 import { useConfiguration } from '../contexts/ConfigurationContext';
 import CharacterChart from '../src/components/Charts';
+import Head from 'next/head';
 
 export default function HomePage() {
   const { soundAllowed, setSoundAllowed } = useSoundAllowed();
@@ -37,7 +38,6 @@ export default function HomePage() {
 
   // Character
 
-  const [rooms, setRooms] = useState([]);
   const [roomActive, setRoomActive] = useState(null);
   const [usersRoom, setUsersRoom] = useState([]);
   const [characters, setCharacters] = useState([]);
@@ -52,85 +52,49 @@ export default function HomePage() {
   const { messages, setMessages } = useMessage();
 
   const socketInitializer = async () => {
-    let sk = io('ws://localhost:3001', {
-      transports: ['websocket'],
-    });
+    var sk = socket;
 
-    setSocket(sk);
+    if (!sk) {
+      sk = io('ws://localhost:3001', {
+        transports: ['websocket'],
+      });
 
-    sk.on('connect', () => {
-      setTimeout(() => {
+      setSocket(sk);
+
+      sk.on('connect', () => {
         setLoading(false);
-      }, 1000);
+      });
+    }
 
-      const newRoomHandler = (data) => {
-        setRooms((prevState) => [...prevState, { room: data }]);
-      };
+    console.log(sk);
 
-      const requestRooms = (data) => {
-        console.log('foi request');
+    if (sk) setLoading(false);
 
-        // Vamos verificar cada sala no array
-        const findIndex = rooms.findIndex(
-          (item) => item.roomID === data.roomID,
-        );
+    const roomUsersHandler = (data) => {
+      setUsersRoom(data.users);
+    };
 
-        console.log(findIndex);
+    const roomUsersTesteHandler = (data) => {
+      alert(data.message);
+    };
 
-        if (findIndex !== -1) {
-          console.log('find');
-          // Se a sala já existe, atualize a sala específica
-          setRooms((prevState) => {
-            const updatedRooms = [...prevState];
-            updatedRooms[findIndex] = {
-              ...updatedRooms[findIndex],
-              users: data.users,
-            };
-            return updatedRooms;
-          });
-        } else {
-          console.log('else');
-          if (Array.isArray(data)) {
-            setRooms((prevState) => [...prevState, ...data]);
-          } else {
-            setRooms((prevState) => [...prevState, data]);
-          }
-        }
-      };
+    const receivedMessageHandler = (data) => {
+      setMessagesRoom((prevState) => [
+        ...prevState,
+        { id: data.id, message: data.message },
+      ]);
+    };
 
-      const roomUsersHandler = (data) => {
-        setUsersRoom(data.users);
-      };
+    // Add event listeners
 
-      const roomUsersTesteHandler = (data) => {
-        alert(data.message);
-      };
+    sk.on('room_users', roomUsersHandler);
+    sk.on('room_users_teste', roomUsersTesteHandler);
+    sk.on('received_message', receivedMessageHandler);
 
-      const receivedMessageHandler = (data) => {
-        setMessagesRoom((prevState) => [
-          ...prevState,
-          { id: data.id, message: data.message },
-        ]);
-      };
-
-      // Adicione um listener para o evento 'result_all_servers'
-      sk.on('result_all_servers', requestRooms);
-
-      // Emita o evento 'request_all_servers' e manipule os resultados diretamente
-      sk.emit('request_all_servers', null, requestRooms);
-
-      // Add event listeners
-      sk.on('new_room', newRoomHandler);
-      sk.on('room_users', roomUsersHandler);
-      sk.on('room_users_teste', roomUsersTesteHandler);
-      sk.on('received_message', receivedMessageHandler);
-
-      // To remove listeners when they are no longer needed
-      sk.off('new_room', newRoomHandler);
-      sk.off('room_users', roomUsersHandler);
-      sk.off('room_users_teste', roomUsersTesteHandler);
-      sk.off('received_message', receivedMessageHandler);
-    });
+    // To remove listeners when they are no longer needed
+    sk.off('room_users', roomUsersHandler);
+    sk.off('room_users_teste', roomUsersTesteHandler);
+    sk.off('received_message', receivedMessageHandler);
   };
 
   useEffect(() => {
@@ -143,6 +107,9 @@ export default function HomePage() {
 
   return (
     <ContentLobby bgLobby={bgLobby} configuration={configuration}>
+      <Head>
+        <title>SL | Home Page</title>
+      </Head>
       <MenuLobby setBgLobby={setBgLobby} soundAllowed={soundAllowed} />
       <MiddleLobby
         actions={{
@@ -159,7 +126,7 @@ export default function HomePage() {
           <ListServer
             actions={{ setOpenServerFind }}
             soundAllowed={soundAllowed}
-            roomsList={{ rooms, setRooms, roomActive, setRoomActive }}
+            roomsList={{ roomActive, setRoomActive }}
             socket={socket}
           />
         )}
@@ -168,8 +135,6 @@ export default function HomePage() {
             actions={{ setOpenCreateMatch }}
             soundAllowed={soundAllowed}
             roomsList={{
-              rooms,
-              setRooms,
               roomActive,
               setRoomActive,
               usersRoom,

@@ -8,6 +8,7 @@ import bgLogin from '../public/images/login/bg_login_page.png';
 import WereWolfLogotype from '../public/images/silence_logotype.png';
 import CustomButton from '../src/components/_Global/Commons/Buttons';
 import CustomInput from '../src/components/_Global/Commons/Inputs';
+import Head from 'next/head';
 
 function Login() {
   const [zoom, setZoom] = useState(false);
@@ -18,6 +19,9 @@ function Login() {
 
   return (
     <section className="relative h-full w-full">
+      <Head>
+        <title>SL | Login</title>
+      </Head>
       <div className={`fixed left-0 top-0 h-full w-full`}>
         <Image
           src={bgLogin}
