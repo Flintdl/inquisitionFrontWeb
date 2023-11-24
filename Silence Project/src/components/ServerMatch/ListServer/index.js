@@ -56,14 +56,17 @@ function ListServer({ actions, soundAllowed, roomsList, socket }) {
         />
       </div>
       <ul className="flex w-full flex-col gap-3">
+        {console.log(rooms)}
         {rooms.length > 0 ? (
-          rooms.map(({ roomID, name, favorite, match }, i) => {
+          rooms.map(({ roomID, users, maxUsers, name, favorite, match }, i) => {
             // const { quantity, max, privateMatch } = match;
             return (
               <ServerList
                 key={i}
                 props={{
                   roomID,
+                  users,
+                  maxUsers,
                   router,
                   setRoomActive,
                   socket,
@@ -84,6 +87,8 @@ function ListServer({ actions, soundAllowed, roomsList, socket }) {
 const ServerList = ({ props }) => {
   const {
     roomID,
+    users,
+    maxUsers,
     router,
     setRoomActive,
     socket,
@@ -110,8 +115,8 @@ const ServerList = ({ props }) => {
         <p className="mt-1 text-sm text-gray-300">
           {/* <span className="text-white">{quantity || "0"}</span>/
           <span className="text-gray-300">{max || "10"}</span> */}
-          <span className="text-white"> 0</span>/
-          <span className="text-gray-300">10</span>
+          <span className="text-white">{users.length}</span>/
+          <span className="text-gray-300">{maxUsers}</span>
         </p>
         {/* <p>
           {privateMatch && privateMatch ? (

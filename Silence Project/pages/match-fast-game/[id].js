@@ -55,9 +55,12 @@ function MatchFastGame({ id }) {
 
   const socketInitializer = async () => {
     if (!socket) {
-      await fetch('/api');
       let sk = io('ws://localhost:3001', {
         transports: ['websocket'],
+      });
+
+      sk.on('connect_error', (error) => {
+        console.error('Error connecting to the server:', error);
       });
 
       setSocket(sk);

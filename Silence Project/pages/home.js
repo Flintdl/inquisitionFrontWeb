@@ -64,7 +64,38 @@ export default function HomePage() {
       }, 1000);
 
       const newRoomHandler = (data) => {
-        setRooms((prevState) => [...prevState, { roomID: data.roomName }]);
+        setRooms((prevState) => [...prevState, { room: data }]);
+      };
+
+      const requestRooms = (data) => {
+        console.log('foi request');
+
+        // Vamos verificar cada sala no array
+        const findIndex = rooms.findIndex(
+          (item) => item.roomID === data.roomID,
+        );
+
+        console.log(findIndex);
+
+        if (findIndex !== -1) {
+          console.log('find');
+          // Se a sala já existe, atualize a sala específica
+          setRooms((prevState) => {
+            const updatedRooms = [...prevState];
+            updatedRooms[findIndex] = {
+              ...updatedRooms[findIndex],
+              users: data.users,
+            };
+            return updatedRooms;
+          });
+        } else {
+          console.log('else');
+          if (Array.isArray(data)) {
+            setRooms((prevState) => [...prevState, ...data]);
+          } else {
+            setRooms((prevState) => [...prevState, data]);
+          }
+        }
       };
 
       const roomUsersHandler = (data) => {
@@ -81,6 +112,12 @@ export default function HomePage() {
           { id: data.id, message: data.message },
         ]);
       };
+
+      // Adicione um listener para o evento 'result_all_servers'
+      sk.on('result_all_servers', requestRooms);
+
+      // Emita o evento 'request_all_servers' e manipule os resultados diretamente
+      sk.emit('request_all_servers', null, requestRooms);
 
       // Add event listeners
       sk.on('new_room', newRoomHandler);
