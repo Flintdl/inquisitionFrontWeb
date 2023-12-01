@@ -38,6 +38,8 @@ function CustomButton({
         return `border-red-500 text-red-500 ${bg}`;
       case 'warn':
         return `border-yellow-500 text-yellow-500 ${bg}`;
+      case 'amber':
+        return `border-amber-950 text-amber-600 bg-amber-900 hover:opacity-70`;
       default:
         return `border-cyan-500 text-cyan-500 ${bg}`;
     }
