@@ -214,10 +214,10 @@ function MatchFastGame({ id }) {
             />
           )}
         </AnimatePresence>
-        <section className="relative flex h-full w-full gap-4 overflow-hidden">
-          <div className="absolute left-4 top-2 z-20 mt-2 flex items-center gap-4 rounded-full p-2 text-white">
+        <section className="relative flex h-full w-full select-none gap-4 overflow-hidden">
+          {/* <div className="absolute left-4 top-2 z-20 mt-2 flex items-center gap-4 rounded-full p-2 text-white">
             <div className="flex items-center gap-2 rounded-md border border-amber-700/30 bg-amber-900/30 py-1 pl-1 pr-2 text-cyan-200 hover:opacity-70">
-              {/* <LobbyThemeMusic
+              <LobbyThemeMusic
                 props={{
                   soundAllowed,
                   themeMusicLobby,
@@ -236,9 +236,9 @@ function MatchFastGame({ id }) {
                     { name: 'The Epic', url: '/sounds/themes/The_Epic.mp3' },
                   ],
                 }}
-              /> */}
+              />
             </div>
-          </div>
+          </div> */}
           <div className="relative flex h-full w-full flex-col overflow-hidden p-4 font-Kanit text-white">
             <Image
               src={image04}
@@ -248,6 +248,8 @@ function MatchFastGame({ id }) {
               priority={true}
               className="block h-auto w-full select-none !object-cover"
             />
+            <div className="absolute left-0 top-0 h-full w-full"></div>
+
             <div className="absolute left-6 top-12 flex gap-4">
               <p
                 onClick={() => setOpenInfoMenu(!openInfoMenu)}
@@ -297,7 +299,7 @@ function MatchFastGame({ id }) {
                     key={i}
                     style={position}
                     className={`absolute flex h-[250px] w-[150px] flex-col items-center justify-center gap-1 p-1`}>
-                    {i}
+                    <div className="absolute -top-12 left-0 z-10 h-full w-full"></div>
                     <span className="absolute -top-8 whitespace-nowrap rounded-lg bg-black/40 px-2 py-1 font-AntonRegular uppercase text-gray-300">
                       {user && (
                         <>
