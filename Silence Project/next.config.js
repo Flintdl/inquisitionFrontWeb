@@ -2,8 +2,8 @@
 module.exports = {
   // ... rest of the configuration.
   images: {
-    domains: ["avatars.githubusercontent.com", "web.whatsapp.com"],
+    domains: ['avatars.githubusercontent.com', 'web.whatsapp.com', 'localhost'],
   },
-  output: "standalone",
+  output: 'standalone',
   productionBrowserSourceMaps: true,
 };

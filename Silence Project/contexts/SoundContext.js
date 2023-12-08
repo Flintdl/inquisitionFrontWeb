@@ -1,23 +1,27 @@
+import { parseCookies, setCookie } from 'nookies';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const SoundAllowedContext = createContext();
 
 export const SoundAllowed = ({ children }) => {
+  const { sound_allowed } = parseCookies();
   const [soundAllowed, setSoundAllowed] = useState('not-allowed');
 
   useEffect(() => {
     // Verifica se o status está salvo no localStorage
-    const localStorageStatus = localStorage.getItem('soundAllowed');
 
-    if (localStorageStatus) {
-      setSoundAllowed(localStorageStatus);
+    if (sound_allowed) {
+      setSoundAllowed(sound_allowed);
     }
-  }, []);
+  }, [sound_allowed]);
 
   const handleSetSound = (status) => {
     // Atualiza o estado e salva no localStorage
     setSoundAllowed(status);
-    localStorage.setItem('soundAllowed', status);
+    setCookie(null, 'sound_allowed', status, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    });
   };
 
   return (

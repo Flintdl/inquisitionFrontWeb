@@ -50,12 +50,10 @@ function Configurations({ actions, soundAllowed, configurationObj }) {
                 <select
                   id="countries"
                   onChange={(e) =>
-                    setConfiguration((prevState) => {
-                      return { ...prevState, graphics: Number(e.target.value) };
-                    })
+                    setConfiguration('graphics', Number(e.target.value))
                   }
                   value={configuration.graphics}
-                  class="block rounded-lg border border-white/20 bg-transparent px-2 py-1 font-KanitBold text-sm text-gray-400 placeholder-black backdrop-blur-sm focus:border-blue-500 focus:ring-blue-500">
+                  className="block rounded-lg border border-white/20 bg-transparent px-2 py-1 font-KanitBold text-sm text-gray-400 placeholder-black backdrop-blur-sm focus:border-blue-500 focus:ring-blue-500">
                   <option
                     className="text-gray-700"
                     selected={configuration.graphics === 2}
@@ -86,9 +84,21 @@ function Configurations({ actions, soundAllowed, configurationObj }) {
                 />
                 <select
                   id="countries"
-                  class="block rounded-md border border-white/20 bg-transparent px-2 py-1 font-KanitBold text-sm text-gray-400 placeholder-black backdrop-blur-sm focus:border-blue-500 focus:ring-blue-500">
-                  <option className="text-gray-700" selected value="1920">
-                    1920x1080
+                  onChange={(e) =>
+                    setConfiguration('exhibition', Number(e.target.value))
+                  }
+                  className="block rounded-md border border-white/20 bg-transparent px-2 py-1 font-KanitBold text-sm text-gray-400 placeholder-black backdrop-blur-sm focus:border-blue-500 focus:ring-blue-500">
+                  <option
+                    className="text-gray-700"
+                    selected={configuration.exhibition === 0}
+                    value="0">
+                    Janela
+                  </option>
+                  <option
+                    className="text-gray-700"
+                    selected={configuration.exhibition === 1}
+                    value="1">
+                    Tela Cheia
                   </option>
                 </select>
               </li>
@@ -102,7 +112,7 @@ function Configurations({ actions, soundAllowed, configurationObj }) {
                 />
                 <select
                   id="countries"
-                  class="block rounded-md border border-white/20 bg-transparent px-2 py-1 font-KanitBold text-sm text-gray-400 placeholder-black backdrop-blur-sm focus:border-blue-500 focus:ring-blue-500">
+                  className="block rounded-md border border-white/20 bg-transparent px-2 py-1 font-KanitBold text-sm text-gray-400 placeholder-black backdrop-blur-sm focus:border-blue-500 focus:ring-blue-500">
                   <option className="text-gray-700" selected value="full">
                     Tela Cheia
                   </option>

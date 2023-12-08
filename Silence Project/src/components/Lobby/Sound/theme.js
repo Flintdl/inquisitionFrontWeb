@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { parseCookies, setCookie } from 'nookies';
 import CustomTitles from '../../_Global/Commons/Titles';
 import { Pause, Play, SkipBack, SkipForward } from '@phosphor-icons/react';
 
@@ -15,7 +16,6 @@ function LobbyThemeMusic({ props }) {
   } = props;
 
   const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
-
   const [volume, setVolume] = useState(0.5);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -25,24 +25,22 @@ function LobbyThemeMusic({ props }) {
     return urls[randomIndex];
   };
 
-  function formatTime(seconds) {
+  const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);
     const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
     const formattedSeconds =
       remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
     return `${formattedMinutes}:${formattedSeconds}`;
-  }
+  };
 
   const handleVisibilityChange = () => {
     if (document.hidden) {
-      // Pausa o som quando a página é minimizada
       if (themeMusicLobbyPaused) {
         themeMusicLobby.pause();
       }
     } else {
       if (soundAllowed === 'allowed') {
-        // Continua o som quando a página é restaurada
         if (themeMusicLobbyPaused) {
           themeMusicLobby.play();
         }
@@ -51,13 +49,11 @@ function LobbyThemeMusic({ props }) {
   };
 
   const handleMusicEnd = () => {
-    // Evento chamado quando a música atual termina
     const nextIndex = (currentMusicIndex + 1) % urls.length;
     setCurrentMusicIndex(nextIndex);
     const nextMusic = urls[nextIndex];
     setThemeActually(nextMusic.name);
 
-    // Verifica se themeMusicLobby está inicializado
     if (themeMusicLobby) {
       themeMusicLobby.src = nextMusic.url;
       themeMusicLobby.play();
@@ -114,7 +110,6 @@ function LobbyThemeMusic({ props }) {
     if (themeMusicLobby) {
       themeMusicLobby.addEventListener('timeupdate', handleTimeUpdate);
     }
-    // Remove o event listener quando o componente é desmontado
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
@@ -141,6 +136,35 @@ function LobbyThemeMusic({ props }) {
       themeMusicLobby.currentTime = newPosition;
     }
   };
+
+  // Recupera o estado do áudio dos cookies
+  useEffect(() => {
+    const savedAudioState = parseCookies().audioState;
+    if (savedAudioState) {
+      const parsedAudioState = JSON.parse(savedAudioState);
+      setCurrentMusicIndex(parsedAudioState.currentMusicIndex);
+      setVolume(parsedAudioState.volume);
+      setCurrentTime(parsedAudioState.currentTime);
+      setThemeMusicLobbyPaused(parsedAudioState.paused);
+    }
+  }, [setThemeMusicLobbyPaused]);
+
+  // Salvar o estado do áudio nos cookies
+  useEffect(() => {
+    const audioState = {
+      paused: themeMusicLobbyPaused,
+      currentMusicIndex,
+      volume,
+      currentTime,
+      duration,
+    };
+
+    // Salvar o objeto de estado do áudio nos cookies
+    setCookie(null, 'audioState', JSON.stringify(audioState), {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    });
+  }, [themeMusicLobbyPaused, currentMusicIndex, volume, currentTime, duration]);
 
   return (
     <div className="flex flex-col items-center gap-1">

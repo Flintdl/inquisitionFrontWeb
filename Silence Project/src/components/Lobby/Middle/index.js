@@ -56,7 +56,7 @@ function MiddleLobby({ actions, permissions, configuration }) {
 
   const list_menu = [
     {
-      name: 'Jogar',
+      name: 'JOGAR',
       action: {
         onClick: () => {
           clickMenuSound();

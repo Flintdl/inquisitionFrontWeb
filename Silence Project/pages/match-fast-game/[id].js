@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import image04 from '../../public/images/match_backgrounds/background_match_option_01.png';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSocket } from '../../contexts/SocketContext';
 import { io } from 'socket.io-client';
 import Loading from '../../src/components/_Global/Loading';
