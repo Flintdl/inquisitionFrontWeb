@@ -10,6 +10,8 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
+        skin_preview:
+          "url('/images/profile_skins/preview/preview_skin_background.png')",
         badge_level: "url('/images/global_badges/badge_level.png')",
         lobby: "url('/images/lobby_backgrounds/background_initial_page.png')",
         lobby02:
@@ -36,6 +38,7 @@ module.exports = {
         secondary: { 300: '#2b2b2b', 500: '#1a2328', 700: '#181818' },
       },
       fontFamily: {
+        Scrubland: ['Scrubland', 'sans-serif'],
         Kanit: ['Kanit', 'sans-serif'],
         KanitRegular: ['KanitRegular', 'sans-serif'],
         KanitBold: ['KanitBold', 'sans-serif'],

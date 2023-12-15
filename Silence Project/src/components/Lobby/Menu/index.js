@@ -38,13 +38,14 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
   return (
     <header className="select-none">
       <nav className="flex items-center justify-between">
-        <h1 className="bold bg-gradient-to-r from-gray-700 via-red-600 to-green-600 bg-clip-text pr-2 font-AntonRegular text-2xl uppercase text-transparent">
+        <h1 className="bold bg-gradient-to-r from-gray-700 via-red-600 to-green-600 bg-clip-text pr-3 font-AntonRegular text-2xl uppercase text-transparent">
           <Image
             src={logotype}
-            width={190}
-            height={32}
+            width={200}
+            quality={100}
+            height={230}
             alt="Logotype"
-            className="drop-shadow-[0_0px_15px_rgba(220,38,38,0.3)]"
+            className="drop-shadow-[0_0px_1px_rgba(255,255,255,1)]"
           />
         </h1>
         <div className="relative">
@@ -165,7 +166,7 @@ const UserLobbyCard = ({ props }) => {
         </div>
       </div>
       <div className="relative flex flex-col">
-        <div className="bg-badge_level relative flex h-8 w-12 items-center justify-center rounded-full font-AntonRegular text-sm">
+        <div className="relative flex h-8 w-12 items-center justify-center rounded-full bg-badge_level font-AntonRegular text-sm">
           <span className="relative z-10 rounded-xl text-yellow-500">
             Lv <span className="text-lg">{level}</span>
           </span>

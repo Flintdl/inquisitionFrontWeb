@@ -142,7 +142,7 @@ function MiddleLobby({ actions, permissions, configuration }) {
   return (
     <section className="grid h-full grid-cols-12 pb-16 pt-32">
       <div className="col-span-4 flex flex-col">
-        <ul className="flex flex-col gap-3 pt-12 font-AntonRegular text-3xl">
+        <ul className="font-Scrubland flex flex-col gap-3 pt-12 text-3xl">
           {list_menu.map(({ name, action, emphasis }, i) => (
             <li
               key={i}

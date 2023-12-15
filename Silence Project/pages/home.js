@@ -19,6 +19,7 @@ import Configurations from '../src/components/Configurations';
 import { useConfiguration } from '../contexts/ConfigurationContext';
 import CharacterChart from '../src/components/Charts';
 import Head from 'next/head';
+import ProfileAccount from '../src/components/Profile';
 
 export default function HomePage() {
   const { soundAllowed, setSoundAllowed } = useSoundAllowed();
@@ -46,7 +47,7 @@ export default function HomePage() {
   const [openCreateMatch, setOpenCreateMatch] = useState(false);
   const [openAcceptSound, setOpenAcceptSound] = useState(true);
 
-  const [bgLobby, setBgLobby] = useState(4);
+  const [bgLobby, setBgLobby] = useState(3);
 
   const { socket, setSocket } = useSocket();
   const { messages, setMessages } = useMessage();
@@ -193,6 +194,7 @@ export default function HomePage() {
             configurationObj={{ configuration, setConfiguration }}
           />
         )}
+        <ProfileAccount />
       </>
       <FooterLobby />
     </ContentLobby>

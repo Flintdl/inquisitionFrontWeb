@@ -41,7 +41,6 @@ function ContentLobby({ children, bgLobby = 1, configuration }) {
       <div className={`fixed left-0 top-0 -z-10 h-full w-full bg-cover`}>
         <Image
           src={selectBg()}
-          title="Character Test"
           alt={`Character Test ${bgLobby}`}
           quality={graphic()}
           fill={true}
