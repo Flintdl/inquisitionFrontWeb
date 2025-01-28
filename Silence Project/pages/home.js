@@ -194,7 +194,7 @@ export default function HomePage() {
             configurationObj={{ configuration, setConfiguration }}
           />
         )}
-        <ProfileAccount />
+        {/* <ProfileAccount /> */}
       </>
       <FooterLobby />
     </ContentLobby>

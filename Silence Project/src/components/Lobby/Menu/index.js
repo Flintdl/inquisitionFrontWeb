@@ -5,7 +5,9 @@ import {
   Plus,
   Question,
   SketchLogo,
+  SquaresFour,
   Users,
+  UsersThree,
 } from '@phosphor-icons/react';
 import { useState } from 'react';
 
@@ -13,6 +15,7 @@ import logotype from '../../../../public/images/logotype.png';
 import Image from 'next/image';
 import LobbyThemeMusic from '../Sound/theme';
 import { useUser } from '../../../../contexts/UserContext';
+import { useRouter } from 'next/router';
 
 function MenuLobby({ setBgLobby, soundAllowed }) {
   const [themeMusicLobby, setThemeMusicLobby] = useState(null);
@@ -20,12 +23,13 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
   const [themeActually, setThemeActually] = useState('');
 
   const { user } = useUser();
+  const router = useRouter();
 
   const { name } = user.player;
   const { avatar, coins, diamonds, level } = user.account;
 
   const [xp, setXp] = useState(100);
-  const [boosted, setBoosted] = useState(false);
+  const [boosted, setBoosted] = useState(true);
 
   const formattedNumbersCash = (cash) => {
     return cash.toLocaleString('pt-BR', {
@@ -35,10 +39,21 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
     });
   };
 
+  const list_menu = [
+    { name: '', action: {}, icon: <SquaresFour size={28} weight="fill" /> },
+    { name: '', action: {}, icon: <UsersThree size={28} weight="fill" /> },
+    { name: 'JOGAR', action: {}, route: '/home' },
+    { name: 'LOJA', action: {} },
+    { name: 'CUSTOMIZAÇÃO', action: {} },
+    { name: 'PERFIL', action: {} },
+    { name: 'FUNÇÕES', action: {} },
+    { name: 'AJUDA', action: {} },
+  ];
+
   return (
     <header className="select-none">
       <nav className="flex items-center justify-between">
-        <h1 className="bold bg-gradient-to-r from-gray-700 via-red-600 to-green-600 bg-clip-text pr-3 font-AntonRegular text-2xl uppercase text-transparent">
+        {/* <h1 className="bold bg-gradient-to-r from-gray-700 via-red-600 to-green-600 bg-clip-text pr-3 font-AntonRegular text-2xl uppercase text-transparent">
           <Image
             src={logotype}
             width={200}
@@ -47,9 +62,25 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
             alt="Logotype"
             className="drop-shadow-[0_0px_1px_rgba(255,255,255,1)]"
           />
-        </h1>
+        </h1> */}
+        <ul className="flex gap-3 rounded-lg border border-gray-600 bg-gray-800/60 p-2 font-Scrubland text-xl">
+          {list_menu.map(({ name, action, icon, route }, i) => (
+            <li
+              key={i}
+              // onMouseEnter={() => playMenuSound()}
+              {...action}
+              className={`group flex cursor-pointer justify-center gap-1 rounded-lg border border-gray-600 bg-gray-800/30 px-2 transition-all hover:bg-gray-800/60 ${
+                router.pathname === route
+                  ? '!bg-amber-400 text-white hover:text-amber-700'
+                  : 'text-white/70 hover:text-amber-300'
+              }`}>
+              {icon && icon}
+              {name}
+            </li>
+          ))}
+        </ul>
         <div className="relative">
-          <ul className="flex w-fit gap-4 rounded-xl border-white/10 bg-amber-700/30 px-3 py-1 backdrop-blur-xl">
+          <ul className="flex w-fit gap-4 rounded-lg border-2 border-black bg-amber-700/50 px-3 py-1 backdrop-blur-xl">
             <li className="flex items-center gap-4 pr-4">
               <div className="flex items-center gap-2 text-amber-400">
                 <Coins weight="duotone" size={32} />
@@ -57,7 +88,7 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
                   {formattedNumbersCash(coins)}
                 </p>
               </div>
-              <div className="relative flex items-center gap-2 text-red-500">
+              <div className="relative flex items-center gap-2 text-red-600">
                 <SketchLogo weight="duotone" size={32} />
                 <p className="font-AntonRegular">
                   {formattedNumbersCash(diamonds)}
@@ -137,7 +168,7 @@ const UserLobbyCard = ({ props }) => {
   const { level, xp, avatar, name, boosted } = props;
   return (
     <div
-      className={`absolute right-0 top-full mt-4 flex items-center gap-2 rounded-2xl p-2 ${
+      className={`absolute right-0 top-full mt-4 flex items-center gap-2 rounded-2xl border-2 border-black p-2 ${
         boosted
           ? 'animate-bgBoosted bg-gradient-to-r from-red-500/80 via-orange-500/80 to-red-500/80 bg-[length:400%]'
           : 'bg-gradient-to-r from-red-500/80 via-red-500/80 to-cyan-500/80'

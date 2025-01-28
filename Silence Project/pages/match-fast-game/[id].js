@@ -290,7 +290,7 @@ function MatchFastGame({ id }) {
               actions={{ startGame, openInfoMenu, setOpenInfoMenu }}
             />
             <MatchUsersMapView
-              props={{ socket, roomInfo, characters, positions }}
+              props={{ socket, roomInfo, characters, positions, turnInfo }}
               person={{ character03 }}
             />
           </div>

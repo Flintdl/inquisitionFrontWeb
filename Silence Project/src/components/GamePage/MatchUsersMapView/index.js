@@ -1,80 +1,134 @@
-import Image from 'next/image';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { TextureLoader } from 'three';
+import { useLoader } from '@react-three/fiber';
+import { Suspense, useEffect } from 'react';
+import { OrbitControls } from '@react-three/drei';
 
-function MatchUsersMapView({ props, person }) {
-  const { socket, roomInfo, characters, positions } = props;
-  const { character03 } = person;
+function Fire() {
+  // Carregar a textura do GIF
+  const fireTexture = useLoader(TextureLoader, '/images/fire.png');
+
+  // Forçar a atualização da textura a cada frame
+  useFrame(() => {
+    if (fireTexture) {
+      fireTexture.needsUpdate = true; // Força a atualização da textura no frame
+    }
+  });
 
   return (
-    <ul
-      style={{
-        position: 'relative',
-        width: '1100px',
-        height: '300px',
-      }}
-      className="relative z-10 mx-auto mb-20 mt-auto flex h-full max-w-[90%] items-end justify-center">
-      {Array.from({ length: roomInfo.maxUsers }).map((_, i) => {
-        const user = roomInfo.users[i]; // Obtenha o usuário correspondente (se existir)
-        const characterIndex = i % characters.length;
-        const character = characters[characterIndex];
-        const position = positions[i]; // Use a posição correspondente
-
-        return (
-          <li
-            key={i}
-            style={position}
-            className={`absolute flex h-[250px] w-[150px] flex-col items-center justify-center gap-1 p-1`}>
-            <div className="absolute -top-12 left-0 z-10 h-full w-full"></div>
-            <span className="absolute -top-8 whitespace-nowrap rounded-lg bg-black/40 px-2 py-1 font-AntonRegular uppercase text-gray-300">
-              {user && (
-                <>
-                  {user.id}
-                  {user.id === socket.id && (
-                    <span className="text-purple-500"> (você)</span>
-                  )}
-                </>
-              )}
-              {!user && 'Aguardando usuário'}
-            </span>
-            <div
-              className={`relative h-full w-full ${
-                user ? 'drop-shadow-[16px_-16px_4px_rgba(0,0,0,.5)]' : ''
-              }`}>
-              <span
-                className={`h-full w-full ${
-                  user
-                    ? user.id === socket.id
-                      ? 'drop-shadow-[0_0px_2px_rgba(255,255,255,1)]'
-                      : 'drop-shadow-[0_0px_2px_rgba(0,0,0,1)]'
-                    : 'drop-shadow-[0_0px_2px_rgba(255,255,255,1)]'
-                }`}>
-                {user && (
-                  <Image
-                    src={user.id === socket.id ? character.image : character03}
-                    alt={`Character ${i + 1}`}
-                    width={300}
-                    height={200}
-                    quality={100}
-                    className="left-0 top-0 block h-auto w-fit select-none brightness-90"
-                  />
-                )}
-                {!user && (
-                  // Renderize algo para indicar que o slot está vazio
-                  <Image
-                    src={character03}
-                    alt={`Character ${i + 1}`}
-                    width={300}
-                    height={200}
-                    quality={100}
-                    className="bh-white left-0 top-0 block h-auto w-fit select-none brightness-0"
-                  />
-                )}
-              </span>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+    <mesh position={[0, -1.4, 0]}>
+      <planeGeometry args={[0.8, 1]} />
+      <meshBasicMaterial map={fireTexture} transparent />
+    </mesh>
   );
 }
 
-export default MatchUsersMapView;
+function FireOut() {
+  // Carregar a textura do GIF
+  const fireTexture = useLoader(TextureLoader, '/images/fireOut.png');
+
+  return (
+    <mesh position={[0, -1.4, 0]}>
+      <planeGeometry args={[0.8, 1]} />
+      <meshBasicMaterial map={fireTexture} transparent />
+    </mesh>
+  );
+}
+
+function Character({ image, position, i }) {
+  const texture = useLoader(TextureLoader, image.src);
+
+  var pos = [0, -1.5, 0];
+
+  switch (i) {
+    case 0:
+      pos = [i - 1.2, -1.3, -0.5];
+      break;
+    case 1:
+      pos = [i - 1.5, -1.3, -1];
+      break;
+    case 2:
+      pos = [i - 1.5, -1.3, -1];
+      break;
+    case 3:
+      pos = [i - 1.5, -1.3, -0.5];
+      break;
+  }
+
+  return (
+    <mesh position={pos}>
+      <planeGeometry args={[1.2, 1.75]} />
+      <meshBasicMaterial map={texture} transparent />
+    </mesh>
+  );
+}
+
+function EmptySlot({ i }) {
+  var pos = [0, -1.5, 0];
+
+  switch (i) {
+    case 0:
+      pos = [i - 1.2, -1.3, -0.5];
+      break;
+    case 1:
+      pos = [i - 1.5, -1.3, -1];
+      break;
+    case 2:
+      pos = [i - 1.5, -1.3, -1];
+      break;
+    case 3:
+      pos = [i - 1.5, -1.3, -0.5];
+      break;
+  }
+
+  return (
+    <mesh position={pos}>
+      <planeGeometry args={[1.2, 1.75]} />
+      <meshBasicMaterial color="black" transparent />
+    </mesh>
+  );
+}
+
+export default function MatchUsersMapView({ props, person }) {
+  const { socket, roomInfo, characters, positions, turnInfo } = props;
+  const { character03 } = person;
+
+  return (
+    <Canvas
+      camera={{ position: [0, 2, 5], fov: 45 }}
+      style={{ width: '100vw', height: '100vh' }}>
+      <ambientLight intensity={5} />
+      <pointLight position={[0, 1, 0]} intensity={1} />
+      <Suspense fallback={null}>
+        {/* Fogueira no centro */}
+        {!turnInfo.isDay && <Fire />}
+        {turnInfo.isDay && <FireOut />}
+
+        {/* Renderizar personagens */}
+        {Array.from({ length: roomInfo.maxUsers }).map((_, i) => {
+          const user = roomInfo.users[i];
+          const characterIndex = i % characters.length;
+          const character = characters[characterIndex];
+          const position = positions[i] || [i - 2, 0, i * 0.5];
+
+          // Renderizar personagem ou EmptySlot com base no número de usuários
+          if (i < roomInfo.users.length) {
+            return (
+              <Character
+                key={i}
+                image={user ? character.image : character03}
+                position={position}
+                i={i}
+              />
+            );
+          } else {
+            return <EmptySlot key={i} i={i} />;
+          }
+        })}
+      </Suspense>
+
+      {/* Controles para câmera */}
+      {/* <OrbitControls /> */}
+    </Canvas>
+  );
+}

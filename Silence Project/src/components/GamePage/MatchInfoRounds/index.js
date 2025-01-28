@@ -7,7 +7,7 @@ function MatchInfoRounds({ props, actions }) {
   const { startGame, openInfoMenu, setOpenInfoMenu } = actions;
 
   return (
-    <div className="absolute left-12 top-12 flex items-center gap-6">
+    <div className="absolute left-12 top-12 z-[9999] flex items-center gap-6">
       <div className="flex gap-4">
         <p
           onClick={() => setOpenInfoMenu(!openInfoMenu)}

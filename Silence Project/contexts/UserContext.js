@@ -7,17 +7,18 @@ export const User = ({ children }) => {
   const { user_info } = parseCookies();
   const [user, setUser] = useState({
     id: '0dd013b5-ab61-47f3-acb1-d191a562520e',
-    username: 'dlduarte',
-    email: 'dld.jb2018@gmail.com',
+    username: 'Flintovsk',
+    email: 'diego_cabal@live.com',
     active: false,
     player: {
       id: '7d966606-32aa-460c-9a24-571e4e0bfbfa',
-      name: '5disaster',
+      name: 'Flintovsk',
     },
     account: {
       id: '5cf0000f-bee0-4ac2-bab4-4f750b5b45da',
-      avatar: 'http://localhost:3000/images/miniature-1-1-mage-profile.png',
-      coins: 1000000000,
+      avatar:
+        'http://localhost:3000/images/characters/default_character_avatar.png',
+      coins: 654223,
       diamonds: 3400,
       level: 13,
     },

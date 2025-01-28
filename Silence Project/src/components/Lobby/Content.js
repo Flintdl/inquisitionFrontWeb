@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import image01 from '../../../public/images/lobby_backgrounds/background_initial_page_option_01.png';
 import image02 from '../../../public/images/lobby_backgrounds/background_initial_page_option_02.png';
-import image03 from '../../../public/images/lobby_backgrounds/background_initial_page_option_03.png';
+import image03 from '../../../public/images/lobby_backgrounds/landscape_home.webp';
 import image04 from '../../../public/images/lobby_backgrounds/background_initial_page_option_04.png';
 import image05 from '../../../public/images/lobby_backgrounds/background_initial_page_option_05.png';
 
 function ContentLobby({ children, bgLobby = 1, configuration }) {
   const selectBg = () => {
-    switch (bgLobby) {
+    switch (1) {
       case 1:
         return image01;
       case 2:
@@ -47,7 +47,7 @@ function ContentLobby({ children, bgLobby = 1, configuration }) {
           priority={true}
           className="block h-auto w-full select-none !object-cover"
         />
-        <div className="h-full w-full bg-gradient-to-r from-black via-black/60 to-black/10 opacity-80"></div>
+        <div className="h-full w-full bg-gradient-to-r from-black/20 via-black/30 to-black/60 opacity-80"></div>
       </div>
       {Array.isArray(children)
         ? children.map((child) => {
