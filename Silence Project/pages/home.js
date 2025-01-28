@@ -200,3 +200,66 @@ export default function HomePage() {
     </ContentLobby>
   );
 }
+
+// import React, { useRef, useState, useEffect } from 'react';
+// import { Canvas, useFrame } from '@react-three/fiber';
+// import { OrbitControls } from '@react-three/drei';
+
+// function Character3D() {
+//   const meshRef = useRef();
+//   const [position, setPosition] = useState([0, 0, 0]);
+
+//   // Função que move o personagem com base nas teclas pressionadas
+//   const handleKeyDown = (e) => {
+//     const [x, y, z] = position;
+//     switch (e.key) {
+//       case 'ArrowUp':
+//         setPosition([x, y + 0.1y, z]); // Move para frente no eixo Z
+//         break;
+//       case 'ArrowDown':
+//         setPosition([x, y - 0.1, z]); // Move para trás no eixo Z
+//         break;
+//       case 'ArrowLeft':
+//         setPosition([x - 0.1, y, z]); // Move para a esquerda no eixo X
+//         break;
+//       case 'ArrowRight':
+//         setPosition([x + 0.1, y, z]); // Move para a direita no eixo X
+//         break;
+//       default:
+//         break;
+//     }
+//   };
+
+//   // Adiciona o evento de escuta de teclas quando o componente é montado
+//   useEffect(() => {
+//     window.addEventListener('keydown', handleKeyDown);
+//     return () => {
+//       window.removeEventListener('keydown', handleKeyDown);
+//     };
+//   }, [position]);
+
+//   // Rotaciona o personagem de forma contínua (opcional)
+//   // useFrame(() => {
+//   //   if (meshRef.current) {
+//   //     meshRef.current.rotation.y += 0.01;
+//   //   }
+//   // });
+
+//   return (
+//     <Canvas style={{ height: '100vh', background: '#1e1e1e' }}>
+//       <ambientLight intensity={0.5} />
+//       <directionalLight position={[5, 5, 5]} intensity={1} />
+
+//       {/* Personagem com movimento nas setas */}
+//       <mesh ref={meshRef} position={position}>
+//         <sphereGeometry args={[1, 32, 32]} />
+//         <meshStandardMaterial color="hotpink" />
+//       </mesh>
+
+//       {/* Controles de órbita */}
+//       <OrbitControls />
+//     </Canvas>
+//   );
+// }
+
+// export default Character3D;

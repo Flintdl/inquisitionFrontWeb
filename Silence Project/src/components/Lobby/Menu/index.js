@@ -17,6 +17,8 @@ import LobbyThemeMusic from '../Sound/theme';
 import { useUser } from '../../../../contexts/UserContext';
 import { useRouter } from 'next/router';
 
+import banner from '../../../../public/images/banners/banner_pixel_teste.png';
+
 function MenuLobby({ setBgLobby, soundAllowed }) {
   const [themeMusicLobby, setThemeMusicLobby] = useState(null);
   const [themeMusicLobbyPaused, setThemeMusicLobbyPaused] = useState(true);
@@ -28,7 +30,7 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
   const { name } = user.player;
   const { avatar, coins, diamonds, level } = user.account;
 
-  const [xp, setXp] = useState(100);
+  const [xp, setXp] = useState(70);
   const [boosted, setBoosted] = useState(true);
 
   const formattedNumbersCash = (cash) => {
@@ -51,7 +53,79 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
   ];
 
   return (
-    <header className="select-none">
+    <header className="absolute left-0 right-0 top-0 z-50 select-none p-12">
+      <ul className="absolute top-44 flex w-96 flex-col gap-4 rounded-2xl border border-gray-700 bg-gradient-to-r from-gray-500/30 to-gray-600/40 p-4 backdrop-blur-lg">
+        <li className="overflow-hidden rounded-lg border border-gray-600/20 bg-gray-600/30 shadow-md transition-all">
+          <div className="relative h-28 w-full">
+            <Image
+              src={banner}
+              title="Banner_test"
+              alt="Banner_test"
+              fill={true}
+              className="block h-auto w-fit select-none !object-fill"
+            />
+          </div>
+        </li>
+        <li className="rounded-lg border border-gray-600/20 bg-gray-600/30 px-3 py-2 font-Scrubland shadow-md transition-all">
+          <div className="flex items-center gap-2">
+            <div className="relative h-16 w-16">
+              <svg className="h-full w-full" viewBox="0 0 36 36">
+                <circle
+                  className="text-gray-300"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  fill="transparent"
+                  r="16"
+                  cx="18"
+                  cy="18"
+                />
+                <circle
+                  className={`${boosted ? 'text-amber-500' : 'text-red-500'}`}
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeDasharray={`${xp}, 100`}
+                  strokeLinecap="round"
+                  fill="transparent"
+                  r="16"
+                  cx="18"
+                  cy="18"
+                  style={{
+                    transform: 'rotate(-90deg)',
+                    transformOrigin: 'center',
+                  }}
+                />
+              </svg>
+              <span
+                className={`absolute inset-0 flex flex-col items-center justify-center font-KanitBold ${
+                  boosted ? 'text-amber-500' : 'text-red-500'
+                }`}>
+                <span className="pb-1 text-[0.65em]">LVL</span>
+                <span className="pb-2 text-3xl leading-3">{level}</span>
+              </span>
+            </div>
+            <div className="relative flex flex-col justify-center rounded-full bg-badge_level font-AntonRegular">
+              <span className="relative z-10 rounded-xl text-xs text-gray-400">
+                30,823 XP GANHO
+              </span>
+              <span className="relative z-10 rounded-xl text-sm text-gray-200">
+                {100 - xp}% PARA O PRÓXIMO NÍVEL
+              </span>
+            </div>
+          </div>
+
+          {/* {boosted && (
+            <div className="mr-2 flex gap-1">
+              <ArrowFatLinesUp
+                weight="fill"
+                className="rounded-lg bg-indigo-500 p-1 text-white"
+                size={18}
+              />
+              <p className="font-AntonRegular text-xs text-white ">2x</p>
+            </div>
+          )} */}
+        </li>
+      </ul>
+
       <nav className="flex items-center justify-between">
         {/* <h1 className="bold bg-gradient-to-r from-gray-700 via-red-600 to-green-600 bg-clip-text pr-3 font-AntonRegular text-2xl uppercase text-transparent">
           <Image
@@ -79,61 +153,50 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
             </li>
           ))}
         </ul>
-        <div className="relative">
-          <ul className="flex w-fit gap-4 rounded-lg border-2 border-black bg-amber-700/50 px-3 py-1 backdrop-blur-xl">
-            <li className="flex items-center gap-4 pr-4">
-              <div className="flex items-center gap-2 text-amber-400">
-                <Coins weight="duotone" size={32} />
-                <p className="font-AntonRegular">
-                  {formattedNumbersCash(coins)}
-                </p>
-              </div>
-              <div className="relative flex items-center gap-2 text-red-600">
-                <SketchLogo weight="duotone" size={32} />
-                <p className="font-AntonRegular">
-                  {formattedNumbersCash(diamonds)}
-                </p>
-                <Plus
-                  weight="bold"
-                  size={16}
-                  className="absolute -right-3 -top-1 cursor-pointer text-amber-400"
-                />
-              </div>
-            </li>
-            <li className="flex items-center">
-              <div className="flex cursor-pointer items-center gap-2 text-amber-300 hover:opacity-80">
-                <p className="hidden font-AntonRegular uppercase lg:block">
-                  Amigos
-                </p>
-                {/* <Users weight="duotone" size={32} /> */}
-              </div>
-            </li>
-            <li className="flex items-center">
-              <div className="flex cursor-pointer items-center gap-2 text-amber-300 hover:opacity-80">
-                <p className="hidden font-AntonRegular uppercase lg:block">
-                  Ajuda
-                </p>
-                {/* <Question weight="duotone" size={32} /> */}
-              </div>
-            </li>
-            <li className="flex items-center">
-              <div className="flex cursor-pointer items-center gap-2 text-amber-300 hover:opacity-80">
-                <p className="hidden font-AntonRegular uppercase lg:block">
-                  Novidades
-                </p>
-                {/* <Note weight="duotone" size={32} /> */}
-              </div>
-            </li>
-            <li className="flex items-center">
-              <div className="flex cursor-pointer items-center gap-2 text-cyan-600 hover:opacity-80">
-                <p className="hidden font-AntonRegular uppercase lg:block">
-                  Perfil
-                </p>
-                {/* <Note weight="duotone" size={32} /> */}
-              </div>
-            </li>
-          </ul>
-          {/* <div className="absolute left-4 top-full mt-2 flex items-center gap-4 rounded-full p-2 text-white">
+        <UserLobbyCard
+          props={{
+            level,
+            xp,
+            avatar,
+            name,
+            boosted,
+            coins,
+            diamonds,
+            formattedNumbersCash,
+          }}
+        />
+
+        {/* <ul className="flex gap-3 rounded-lg border border-gray-600 bg-gray-800/60 p-2 font-Scrubland text-xl">
+          <li className="flex items-center">
+            <div className="flex cursor-pointer items-center gap-2 text-amber-300 hover:opacity-80">
+              <p className="hidden font-AntonRegular uppercase lg:block">
+                Amigos
+              </p>
+            </div>
+          </li>
+          <li className="flex items-center">
+            <div className="flex cursor-pointer items-center gap-2 text-amber-300 hover:opacity-80">
+              <p className="hidden font-AntonRegular uppercase lg:block">
+                Ajuda
+              </p>
+            </div>
+          </li>
+          <li className="flex items-center">
+            <div className="flex cursor-pointer items-center gap-2 text-amber-300 hover:opacity-80">
+              <p className="hidden font-AntonRegular uppercase lg:block">
+                Novidades
+              </p>
+            </div>
+          </li>
+          <li className="flex items-center">
+            <div className="flex cursor-pointer items-center gap-2 text-cyan-600 hover:opacity-80">
+              <p className="hidden font-AntonRegular uppercase lg:block">
+                Perfil
+              </p>
+            </div>
+          </li> 
+        </ul> */}
+        {/* <div className="absolute left-4 top-full mt-2 flex items-center gap-4 rounded-full p-2 text-white">
             <div className="flex items-center gap-2 rounded-md border border-amber-700/30 bg-amber-900/30 px-1 py-1 text-cyan-200 hover:opacity-70">
               <LobbyThemeMusic
                 props={{
@@ -157,64 +220,47 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
               />
             </div>
           </div> */}
-          <UserLobbyCard props={{ level, xp, avatar, name, boosted }} />
-        </div>
       </nav>
     </header>
   );
 }
 
 const UserLobbyCard = ({ props }) => {
-  const { level, xp, avatar, name, boosted } = props;
+  const {
+    level,
+    xp,
+    avatar,
+    name,
+    boosted,
+    coins,
+    diamonds,
+    formattedNumbersCash,
+  } = props;
   return (
-    <div
-      className={`absolute right-0 top-full mt-4 flex items-center gap-2 rounded-2xl border-2 border-black p-2 ${
-        boosted
-          ? 'animate-bgBoosted bg-gradient-to-r from-red-500/80 via-orange-500/80 to-red-500/80 bg-[length:400%]'
-          : 'bg-gradient-to-r from-red-500/80 via-red-500/80 to-cyan-500/80'
-      }`}>
-      <div className="flex w-fit items-center justify-center overflow-hidden rounded-xl border-2 border-red-600/90 bg-black shadow-md">
-        <Image src={avatar} width={44} height={44} alt="Profile" />
-      </div>
-      <div className="flex w-32 flex-col gap-1">
-        <div className="relative">
-          <p className="relative z-10 font-KanitBold text-gray-300">{name}</p>
-          <span className="absolute left-[0.15rem] top-[50%] z-0 mt-[0.20rem] -translate-y-[50%] whitespace-nowrap text-black blur-[1px]">
-            {name}
-          </span>
-        </div>
-        <div className="relative w-full overflow-hidden rounded-full border bg-gray-300">
-          <p
-            className={`flex h-3 w-full items-center justify-center rounded-sm text-xs ${
-              boosted
-                ? 'bg-gradient-to-r from-red-500/70 via-orange-500/70 to-black/70'
-                : 'bg-gradient-to-r from-red-500 to-black'
-            }`}
-            style={{ width: `${xp}%` }}></p>
-          <span className="absolute -top-[.10rem] left-[50%] block w-fit -translate-x-[50%] font-KanitBold text-[0.65rem] text-black">
-            {xp}/100
-          </span>
-        </div>
-      </div>
-      <div className="relative flex flex-col">
-        <div className="relative flex h-8 w-12 items-center justify-center rounded-full bg-badge_level font-AntonRegular text-sm">
-          <span className="relative z-10 rounded-xl text-yellow-500">
-            Lv <span className="text-lg">{level}</span>
-          </span>
-          <span className="absolute left-[50%] top-[50%] z-0 ml-[0.05rem] mt-[0.15rem] -translate-x-[50%] -translate-y-[50%] whitespace-nowrap text-lg text-black/50 blur-[1px]">
-            Lv <span className="text-xl">{level}</span>
-          </span>
-        </div>
-        {boosted && (
-          <div className="mr-2 flex gap-1">
-            <ArrowFatLinesUp
-              weight="fill"
-              className="rounded-lg bg-indigo-500 p-1 text-white"
-              size={18}
-            />
-            <p className="font-AntonRegular text-xs text-white ">2x</p>
+    <div className="absolute right-12 top-12 flex items-start gap-4">
+      <ul className="flex gap-3 rounded-lg border border-gray-600/40 bg-gray-800/60 px-2 py-1 font-Scrubland text-lg">
+        <li className="flex items-center gap-4 pr-4">
+          <div className="flex items-center gap-2 text-amber-400">
+            <Coins weight="duotone" size={32} />
+            <p className="font-AntonRegular">{formattedNumbersCash(coins)}</p>
           </div>
-        )}
+          <div className="relative flex items-center gap-2 text-red-600">
+            <SketchLogo weight="duotone" size={32} />
+            <p className="font-AntonRegular">
+              {formattedNumbersCash(diamonds)}
+            </p>
+            <Plus
+              weight="bold"
+              size={16}
+              className="absolute -right-5 top-1/2 -translate-y-1/2 cursor-pointer text-amber-400"
+            />
+          </div>
+        </li>
+      </ul>
+      <div className="rounded-xl border border-gray-600/40 bg-gray-800/60 p-2">
+        <div className="flex w-fit items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-gray-500/30 to-gray-600/40 shadow-md backdrop-blur-lg">
+          <Image src={avatar} width={80} height={80} alt="Profile" />
+        </div>
       </div>
     </div>
   );

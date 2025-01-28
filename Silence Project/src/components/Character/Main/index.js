@@ -57,7 +57,9 @@ function MainCharacter({ configuration, character }) {
         <div className="absolute -top-8 left-[50%] z-10 -translate-x-[50%] font-AntonRegular text-xl text-white">
           {character.name}
         </div>
+        <div className="absolute -bottom-12 left-1/2 -z-[5] h-[200px] w-[400px] -translate-x-1/2 bg-gradient-to-b from-white/70 via-white/70 to-white/20 opacity-80 blur-xl"></div>
       </div>
+
       <div className="absolute -bottom-32 -left-36 -z-10 overflow-hidden">
         <Image
           src={floorLobbyCharacter01}

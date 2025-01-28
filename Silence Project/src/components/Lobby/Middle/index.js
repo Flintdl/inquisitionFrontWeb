@@ -141,23 +141,44 @@ function MiddleLobby({ actions, permissions, configuration }) {
     },
   ];
 
+  const handleMouseMove = (e, setBackground) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setBackground(
+      `radial-gradient(circle at ${x}px ${y}px, rgba(255, 255, 255, 0.3), transparent)`,
+    );
+  };
+
+  const handleMouseLeave = (setBackground) => {
+    setBackground('');
+  };
+
   return (
-    <section className="flex h-full w-full justify-center py-20">
-      <div className="absolute bottom-14 right-14 flex flex-col rounded-2xl border border-gray-700 bg-gray-500/40 p-4">
+    <section className="flex h-full w-full justify-center py-20 ">
+      <div className="absolute bottom-14 right-14 flex flex-col rounded-2xl border border-gray-700 bg-gradient-to-r from-gray-500/30 to-gray-600/40 p-4 backdrop-blur-lg">
         <ul className="flex flex-col gap-3 font-Scrubland text-3xl">
-          {list_menu.map(({ name, action, emphasis }, i) => (
-            <li
-              key={i}
-              onMouseEnter={() => playMenuSound()}
-              {...action}
-              className={`group flex cursor-pointer justify-center gap-1 rounded-lg border-2 border-gray-600 bg-gray-800/30 px-4 py-2 transition-all hover:bg-gray-800/60 ${
-                emphasis
-                  ? 'text-amber-500 hover:text-amber-300'
-                  : 'text-white/70 hover:text-amber-300'
-              }`}>
-              {name}
-            </li>
-          ))}
+          {list_menu.map(({ name, action, emphasis }, i) => {
+            const [background, setBackground] = useState('');
+            return (
+              <li
+                key={i}
+                onMouseEnter={() => playMenuSound()}
+                onMouseMove={(e) => handleMouseMove(e, setBackground)}
+                onMouseLeave={() => handleMouseLeave(setBackground)}
+                {...action}
+                className={`group relative flex cursor-pointer justify-center gap-1 rounded-lg border-2 border-gray-600 bg-gray-800/30 px-4 py-2 transition-all hover:bg-gray-800/60 ${
+                  emphasis
+                    ? 'text-amber-500 hover:text-amber-300'
+                    : 'text-white/70 hover:text-amber-300'
+                }`}>
+                <span
+                  className="absolute inset-0 -z-10 rounded-lg"
+                  style={{ background }}></span>
+                {name}
+              </li>
+            );
+          })}
         </ul>
       </div>
       <MainCharacter configuration={configuration} character={character} />
