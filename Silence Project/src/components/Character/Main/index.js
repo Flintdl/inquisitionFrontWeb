@@ -7,6 +7,7 @@ import hairSkin02 from '../../../../public/images/characters_skins/hair/hair_ski
 import eyeSkin01 from '../../../../public/images/characters_skins/eye_skin_01.png';
 import mouthSkin01 from '../../../../public/images/characters_skins/mouth/mouth_skin_03.png';
 import glassesSkin03 from '../../../../public/images/characters_skins/glasess/glasess_skin_04.png';
+import floorLobbyCharacter01 from '../../../../public/images/characters/floor_character_01.png';
 
 function MainCharacter({ configuration, character }) {
   const graphic = () => {
@@ -51,11 +52,21 @@ function MainCharacter({ configuration, character }) {
           fill={true}
           quality={graphic()}
           priority={true}
-          className="mt-4 block h-auto w-fit select-none !object-contain "
+          className="block h-auto w-fit select-none !object-contain "
         />
         <div className="absolute -top-8 left-[50%] z-10 -translate-x-[50%] font-AntonRegular text-xl text-white">
           {character.name}
         </div>
+      </div>
+      <div className="absolute -bottom-32 -left-36 -z-10 overflow-hidden">
+        <Image
+          src={floorLobbyCharacter01}
+          title="Character Test"
+          alt="Character Test"
+          quality={graphic()}
+          priority={true}
+          className="block h-auto w-fit select-none !object-contain "
+        />
       </div>
       {/* <div className="absolute bottom-80 mt-auto flex h-12 w-full items-center justify-center gap-96">
           <div className="itens-center flex cursor-pointer justify-center rounded-xl bg-cyan-700 p-1 hover:opacity-80">
@@ -85,7 +96,7 @@ function MainCharacter({ configuration, character }) {
 
 function Hat({ src, graphic }) {
   return (
-    <div className="absolute bottom-[calc(100%-180px)] left-[55%] z-10 h-[250px] w-[250px] -translate-x-[50%] rotate-6">
+    <div className="absolute bottom-[calc(100%-164px)] left-[55%] z-10 h-[250px] w-[250px] -translate-x-[50%] rotate-6">
       <Image
         src={src}
         title="hatSkinTest"
@@ -101,7 +112,7 @@ function Hat({ src, graphic }) {
 
 function Hair({ src, graphic }) {
   return (
-    <div className="absolute bottom-[calc(100%-384px)] left-[50%] z-10 h-[360px] w-[360px] -translate-x-[50%]">
+    <div className="absolute bottom-[calc(100%-368px)] left-[50%] z-10 h-[360px] w-[360px] -translate-x-[50%]">
       <Image
         src={src}
         title="hatSkinTest"
@@ -117,7 +128,7 @@ function Hair({ src, graphic }) {
 
 function Glasses({ src, graphic }) {
   return (
-    <div className="absolute bottom-[calc(100%-275px)] left-[50%] z-10 h-[225px] w-[300px] -translate-x-[50%] ">
+    <div className="absolute bottom-[calc(100%-259px)] left-[50%] z-10 h-[225px] w-[300px] -translate-x-[50%] ">
       <Image
         src={src}
         title="hatSkinTest"
@@ -133,7 +144,7 @@ function Glasses({ src, graphic }) {
 
 function Eye({ src, graphic }) {
   return (
-    <div className="absolute bottom-[calc(100%-255px)] left-[50%] z-10 h-[180px] w-[300px] -translate-x-[50%] ">
+    <div className="absolute bottom-[calc(100%-239px)] left-[50%] z-10 h-[180px] w-[300px] -translate-x-[50%] ">
       <Image
         src={src}
         title="hatSkinTest"
@@ -149,7 +160,7 @@ function Eye({ src, graphic }) {
 
 function Mouth({ src, graphic }) {
   return (
-    <div className="absolute bottom-[calc(100%-245px)] left-[50%] z-10 h-[150px] w-[270px] -translate-x-[50%] ">
+    <div className="absolute bottom-[calc(100%-229px)] left-[50%] z-10 h-[150px] w-[270px] -translate-x-[50%] ">
       <Image
         src={src}
         title="hatSkinTest"
