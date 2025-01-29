@@ -24,9 +24,9 @@ function MainCharacter({ configuration, character }) {
   };
 
   return (
-    <div className="relative flex h-full select-none items-end justify-end pb-4 2xl:pr-40">
+    <div className="relative flex h-full select-none items-end justify-end 2xl:pr-40">
       <div className="absolute top-0 z-20 h-full w-full"></div>
-      <div className="relative flex h-[520px] w-[300px] max-w-[600px] select-none rounded-md">
+      <div className="relative flex h-[480px] w-[200px] max-w-[600px] select-none rounded-md">
         {character.skins.eye && (
           <Eye src={character.skins.eye} graphic={() => graphic()} />
         )}
@@ -104,8 +104,8 @@ function Hat({ src, graphic }) {
         title="hatSkinTest"
         alt="hatSkinTest"
         fill={true}
+        sizes="100vw"
         quality={graphic()}
-        priority={true}
         className="block select-none"
       />
     </div>
@@ -114,14 +114,14 @@ function Hat({ src, graphic }) {
 
 function Hair({ src, graphic }) {
   return (
-    <div className="absolute bottom-[calc(100%-368px)] left-[50%] z-10 h-[360px] w-[360px] -translate-x-[50%]">
+    <div className="absolute -top-4 left-[50%] z-10 h-[200px] w-[200px] -translate-x-[50%]">
       <Image
         src={src}
         title="hatSkinTest"
         alt="hatSkinTest"
         fill={true}
+        sizes="100vw"
         quality={graphic()}
-        priority={true}
         className="block select-none"
       />
     </div>
@@ -130,14 +130,14 @@ function Hair({ src, graphic }) {
 
 function Glasses({ src, graphic }) {
   return (
-    <div className="absolute bottom-[calc(100%-259px)] left-[50%] z-10 h-[225px] w-[300px] -translate-x-[50%] ">
+    <div className="absolute left-[50%] top-4 z-10 h-[100px] w-[150px] -translate-x-[50%] ">
       <Image
         src={src}
         title="hatSkinTest"
         alt="hatSkinTest"
         fill={true}
+        sizes="100vw"
         quality={graphic()}
-        priority={true}
         className="block select-none"
       />
     </div>
@@ -146,14 +146,14 @@ function Glasses({ src, graphic }) {
 
 function Eye({ src, graphic }) {
   return (
-    <div className="absolute bottom-[calc(100%-239px)] left-[50%] z-10 h-[180px] w-[300px] -translate-x-[50%] ">
+    <div className="absolute left-[50%] top-4 z-10 h-[90px] w-[150px] -translate-x-[50%] ">
       <Image
         src={src}
         title="hatSkinTest"
         alt="hatSkinTest"
         fill={true}
+        sizes="100vw"
         quality={graphic()}
-        priority={true}
         className="block select-none"
       />
     </div>
@@ -162,14 +162,14 @@ function Eye({ src, graphic }) {
 
 function Mouth({ src, graphic }) {
   return (
-    <div className="absolute bottom-[calc(100%-229px)] left-[50%] z-10 h-[150px] w-[270px] -translate-x-[50%] ">
+    <div className="absolute left-1/2 top-12 z-10 h-[70px] w-[150px] -translate-x-1/2">
       <Image
         src={src}
         title="hatSkinTest"
         alt="hatSkinTest"
         fill={true}
+        sizes="100vw"
         quality={graphic()}
-        priority={true}
         className="block select-none"
       />
     </div>
@@ -184,8 +184,8 @@ function Wings({ src, graphic }) {
         title="hatSkinTest"
         alt="hatSkinTest"
         fill={true}
+        sizes="100vw"
         quality={graphic()}
-        priority={true}
         className="block select-none"
       />
     </div>

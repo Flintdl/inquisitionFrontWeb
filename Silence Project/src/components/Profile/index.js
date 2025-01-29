@@ -151,7 +151,7 @@ const Middle = ({ configuration, characterConfig }) => {
   const { character, setCharacter } = characterConfig;
 
   return (
-    <section className="w-[50%] p-4">
+    <section className="flex w-[50%] px-4 py-24">
       <MainCharacterProfile
         configuration={configuration}
         character={character}

@@ -6,7 +6,7 @@ import characterTest from '../../../../public/images/characters/default_characte
 import hatSkin01 from '../../../../public/images/characters_skins/hat_skin_01.png';
 import hairSkin03 from '../../../../public/images/characters_skins/hair/hair_skin_03.png';
 import eyeSkin02 from '../../../../public/images/characters_skins/eye_skin_02.png';
-import mouthSkin01 from '../../../../public/images/characters_skins/mouth/mouth_skin_03.png';
+import mouthSkin05 from '../../../../public/images/characters_skins/mouth/mouth_skin_05.png';
 import glassesSkin04 from '../../../../public/images/characters_skins/glasess/glasess_skin_04.png';
 
 function MiddleLobby({ actions, permissions, configuration }) {
@@ -36,7 +36,7 @@ function MiddleLobby({ actions, permissions, configuration }) {
       body: null,
       wings: null,
       eye: eyeSkin02,
-      mouth: mouthSkin01,
+      mouth: mouthSkin05,
       glasses: glassesSkin04,
       gloves: null,
       weapon: null,

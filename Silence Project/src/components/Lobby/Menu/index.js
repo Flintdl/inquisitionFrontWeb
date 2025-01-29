@@ -55,7 +55,7 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
   return (
     <header className="absolute left-0 right-0 top-0 z-50 select-none p-12">
       <ul className="absolute top-44 flex w-96 flex-col gap-4 rounded-2xl border border-gray-700 bg-gradient-to-r from-gray-500/30 to-gray-600/40 p-4 backdrop-blur-lg">
-        <li className="overflow-hidden rounded-lg border border-gray-600/20 bg-gray-600/30 shadow-md transition-all">
+        <li className="overflow-hidden rounded-lg border border-gray-600/20 bg-gray-600/30 shadow-md">
           <div className="relative h-28 w-full">
             <Image
               src={banner}
@@ -64,9 +64,21 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
               fill={true}
               className="block h-auto w-fit select-none !object-fill"
             />
+            <div className="absolute flex h-full w-full flex-col p-2 backdrop-blur-[1px]">
+              <ul className="flex gap-1">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <li key={index}>
+                    <span className="block h-2 w-2 rounded-full bg-white"></span>
+                  </li>
+                ))}
+              </ul>
+              <h5 className="mt-auto font-Scrubland text-lg leading-3 text-gray-200 shadow-xl">
+                PROJETO TATSU
+              </h5>
+            </div>
           </div>
         </li>
-        <li className="rounded-lg border border-gray-600/20 bg-gray-600/30 px-3 py-2 font-Scrubland shadow-md transition-all">
+        <li className="rounded-lg border border-gray-600/20 bg-gray-600/30 px-3 py-2 font-Scrubland shadow-md">
           <div className="flex items-center gap-2">
             <div className="relative h-16 w-16">
               <svg className="h-full w-full" viewBox="0 0 36 36">
@@ -124,6 +136,19 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
             </div>
           )} */}
         </li>
+        {/* <li className="rounded-lg border border-gray-600/20 bg-gray-600/30 px-3 py-2 font-Scrubland shadow-md">
+          Jogadores recentes
+          <ul className="flex flex-col gap-2">
+            {['Diego', 'Lucas', 'Rafael', 'Ricardo', 'Thiago'].map(
+              (name, i) => (
+                <li className="flex items-center gap-1 text-gray-300">
+                  <span className="block h-2 w-2 rounded-full bg-green-500"></span>
+                  {name}
+                </li>
+              ),
+            )}
+          </ul>
+        </li> */}
       </ul>
 
       <nav className="flex items-center justify-between">
