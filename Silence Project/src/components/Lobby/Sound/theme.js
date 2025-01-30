@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import { parseCookies, setCookie } from 'nookies';
 import CustomTitles from '../../_Global/Commons/Titles';
-import { Pause, Play, SkipBack, SkipForward } from '@phosphor-icons/react';
+import {
+  Pause,
+  Play,
+  SkipBack,
+  SkipForward,
+  SpeakerHigh,
+  SpeakerLow,
+} from '@phosphor-icons/react';
 
 function LobbyThemeMusic({ props }) {
   const {
@@ -19,6 +26,7 @@ function LobbyThemeMusic({ props }) {
   const [volume, setVolume] = useState(0.5);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [openVolume, setOpenVolume] = useState(false);
 
   const getRandomMusic = () => {
     const randomIndex = Math.floor(Math.random() * urls.length);
@@ -167,66 +175,93 @@ function LobbyThemeMusic({ props }) {
   }, [themeMusicLobbyPaused, currentMusicIndex, volume, currentTime, duration]);
 
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex w-full flex-col items-center gap-1">
       <div className="flex w-full items-center gap-1">
         <CustomTitles
           tag="p"
           size={12}
           pos="left"
           text={themeActually}
-          customClass="!text-amber-400 font-KanitBold mr-auto"
+          customClass="!text-gray-400 font-KanitBold uppercase !text-sm mr-auto"
         />
         <SkipBack
           weight="fill"
           onClick={playPreviousMusic}
-          className="cursor-pointer text-amber-600"
+          className="cursor-pointer"
         />
         {themeMusicLobbyPaused && (
           <Pause
             weight="fill"
             onClick={() => setThemeMusicLobbyPaused(!themeMusicLobbyPaused)}
-            className="cursor-pointer text-amber-600"
+            className="cursor-pointer"
           />
         )}
         {!themeMusicLobbyPaused && (
           <Play
             weight="fill"
             onClick={() => setThemeMusicLobbyPaused(!themeMusicLobbyPaused)}
-            className="cursor-pointer text-amber-600"
+            className="cursor-pointer"
           />
         )}
         <SkipForward
           weight="fill"
           onClick={playNextMusic}
-          className="cursor-pointer text-amber-600"
+          className="cursor-pointer"
         />
       </div>
-      <div className="flex items-center gap-1">
-        <span className="font-KanitRegular text-sm text-amber-600">0</span>
-        <input
-          type="range"
-          step={0.1}
-          value={volume}
-          onChange={(e) => setVolume(e.target.value)}
-          min={0}
-          max={1}
-          className="appearance-none bg-transparent [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/40 [&::-webkit-slider-thumb]:h-[8px] [&::-webkit-slider-thumb]:w-[8px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-amber-500"
-        />
-        <span className="font-KanitRegular text-sm text-amber-600">100</span>
-      </div>
+
       <div className="flex w-full items-center justify-center gap-1">
-        <span className="block w-10 text-left font-KanitRegular text-sm text-amber-600">
+        <div className="flex w-fit items-center gap-1">
+          {volume >= 0.7 && (
+            <SpeakerHigh
+              weight="fill"
+              size={20}
+              className="cursor-pointer"
+              onClick={() => setOpenVolume((prevState) => !prevState)}
+            />
+          )}
+          {volume < 0.7 && (
+            <SpeakerLow
+              weight="fill"
+              size={20}
+              className="cursor-pointer"
+              onClick={() => setOpenVolume((prevState) => !prevState)}
+            />
+          )}
+          {openVolume && (
+            <div className="absolute -left-20 top-[calc(100%+90px)] z-10 flex rotate-90 items-center gap-1 rounded-md bg-gray-400 py-1">
+              <span className="ml-2 block -rotate-90 font-KanitBold text-sm">
+                0
+              </span>
+              <div className="h-fit w-fit rounded-lg">
+                <input
+                  type="range"
+                  step={0.1}
+                  value={volume}
+                  onChange={(e) => setVolume(e.target.value)}
+                  min={0}
+                  max={1}
+                  className="h-3 appearance-none bg-transparent p-0 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-black/40 [&::-webkit-slider-thumb]:h-[8px] [&::-webkit-slider-thumb]:w-[8px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
+                />
+              </div>
+              <span className="block -rotate-90 font-KanitBold text-sm">
+                100
+              </span>
+            </div>
+          )}
+        </div>
+        <span className="block w-10 text-left font-KanitRegular text-sm">
           {formatTime(currentTime)}
         </span>
         <span
-          className="relative h-2 flex-1 rounded-md bg-black"
+          className="relative h-2 flex-1 rounded-md bg-gray-400"
           onClick={handleProgressBarClick}>
           <span
             style={{ width: `${(currentTime / duration) * 100}%` }}
-            className="absolute left-0 top-0 h-2 rounded-md bg-amber-800"
+            className="absolute left-0 top-0 h-2 rounded-md bg-white"
             onClick={handleProgressBarClick}></span>
         </span>
-        <span className="block w-10 text-right font-KanitRegular text-sm text-amber-600">
+        <span className="block w-10 text-right font-KanitRegular text-sm">
           {formatTime(duration)}
         </span>
       </div>

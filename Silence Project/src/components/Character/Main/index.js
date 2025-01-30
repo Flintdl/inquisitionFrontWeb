@@ -1,12 +1,5 @@
 import Image from 'next/image';
-import { useState } from 'react';
 
-import characterTest from '../../../../public/images/characters/default_character.png';
-import hatSkin01 from '../../../../public/images/characters_skins/hat_skin_01.png';
-import hairSkin02 from '../../../../public/images/characters_skins/hair/hair_skin_02.png';
-import eyeSkin01 from '../../../../public/images/characters_skins/eye_skin_01.png';
-import mouthSkin01 from '../../../../public/images/characters_skins/mouth/mouth_skin_03.png';
-import glassesSkin03 from '../../../../public/images/characters_skins/glasess/glasess_skin_04.png';
 import floorLobbyCharacter01 from '../../../../public/images/characters/floor_character_01.png';
 
 function MainCharacter({ configuration, character }) {
@@ -24,9 +17,9 @@ function MainCharacter({ configuration, character }) {
   };
 
   return (
-    <div className="relative flex h-full select-none items-end justify-end 2xl:pr-40">
+    <div className="relative mt-12 flex h-full w-full max-w-[350px] select-none items-end justify-center">
       <div className="absolute top-0 z-20 h-full w-full"></div>
-      <div className="relative flex h-[480px] w-[200px] max-w-[600px] select-none rounded-md">
+      <div className="relative flex h-[480px] min-h-[30rem] w-[200px] min-w-[13rem] max-w-[200px] select-none rounded-md">
         {character.skins.eye && (
           <Eye src={character.skins.eye} graphic={() => graphic()} />
         )}
@@ -52,15 +45,15 @@ function MainCharacter({ configuration, character }) {
           fill={true}
           quality={graphic()}
           priority={true}
-          className="block h-auto w-fit select-none !object-contain "
+          className="block h-auto w-fit select-none !object-contain"
         />
-        <div className="absolute -top-8 left-[50%] z-10 -translate-x-[50%] font-AntonRegular text-xl text-white">
+        <div className="absolute -top-16 left-[50%] z-10 -translate-x-[50%] rounded-md bg-gray-500/30 px-2 py-1 font-AntonRegular text-lg text-white backdrop-blur-sm">
           {character.name}
         </div>
         <div className="absolute -bottom-12 left-1/2 -z-[5] h-[200px] w-[400px] -translate-x-1/2 bg-gradient-to-b from-white/70 via-white/70 to-white/20 opacity-80 blur-xl"></div>
       </div>
 
-      <div className="absolute -bottom-32 -left-36 -z-10 overflow-hidden">
+      <div className="absolute -bottom-[90px] left-0 -z-10 overflow-hidden">
         <Image
           src={floorLobbyCharacter01}
           title="Character Test"

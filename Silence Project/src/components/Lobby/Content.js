@@ -7,7 +7,7 @@ import image05 from '../../../public/images/lobby_backgrounds/background_initial
 
 function ContentLobby({ children, bgLobby = 1, configuration }) {
   const selectBg = () => {
-    switch (1) {
+    switch (5) {
       case 1:
         return image01;
       case 2:

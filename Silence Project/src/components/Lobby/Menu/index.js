@@ -53,7 +53,7 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
   ];
 
   return (
-    <header className="absolute left-0 right-0 top-0 z-50 select-none p-12">
+    <header className="absolute left-0 right-0 top-0 z-10 select-none p-12">
       <ul className="absolute top-44 flex w-96 flex-col gap-4 rounded-2xl border border-gray-700 bg-gradient-to-r from-gray-500/30 to-gray-600/40 p-4 backdrop-blur-lg">
         <li className="overflow-hidden rounded-lg border border-gray-600/20 bg-gray-600/30 shadow-md">
           <div className="relative h-28 w-full">
@@ -135,6 +135,32 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
               <p className="font-AntonRegular text-xs text-white ">2x</p>
             </div>
           )} */}
+        </li>
+        <li className="rounded-lg border border-gray-600/20 bg-gray-600/30 px-3 py-2 font-Scrubland shadow-md">
+          <div className="flex items-center gap-4 rounded-full text-white">
+            <div className="relative flex w-full items-center gap-2">
+              <LobbyThemeMusic
+                props={{
+                  soundAllowed,
+                  themeMusicLobby,
+                  setThemeMusicLobby,
+                  themeActually,
+                  setThemeActually,
+                  setThemeMusicLobbyPaused,
+                  themeMusicLobbyPaused,
+                  urls: [
+                    { name: 'Adventure', url: '/sounds/themes/Adventure.mp3' },
+                    { name: 'Chase', url: '/sounds/themes/Chase.mp3' },
+                    {
+                      name: 'ForestWalk',
+                      url: '/sounds/themes/ForestWalk.mp3',
+                    },
+                    { name: 'The Epic', url: '/sounds/themes/The_Epic.mp3' },
+                  ],
+                }}
+              />
+            </div>
+          </div>
         </li>
         {/* <li className="rounded-lg border border-gray-600/20 bg-gray-600/30 px-3 py-2 font-Scrubland shadow-md">
           Jogadores recentes
@@ -221,30 +247,6 @@ function MenuLobby({ setBgLobby, soundAllowed }) {
             </div>
           </li> 
         </ul> */}
-        {/* <div className="absolute left-4 top-full mt-2 flex items-center gap-4 rounded-full p-2 text-white">
-            <div className="flex items-center gap-2 rounded-md border border-amber-700/30 bg-amber-900/30 px-1 py-1 text-cyan-200 hover:opacity-70">
-              <LobbyThemeMusic
-                props={{
-                  soundAllowed,
-                  themeMusicLobby,
-                  setThemeMusicLobby,
-                  themeActually,
-                  setThemeActually,
-                  setThemeMusicLobbyPaused,
-                  themeMusicLobbyPaused,
-                  urls: [
-                    { name: 'Adventure', url: '/sounds/themes/Adventure.mp3' },
-                    { name: 'Chase', url: '/sounds/themes/Chase.mp3' },
-                    {
-                      name: 'ForestWalk',
-                      url: '/sounds/themes/ForestWalk.mp3',
-                    },
-                    { name: 'The Epic', url: '/sounds/themes/The_Epic.mp3' },
-                  ],
-                }}
-              />
-            </div>
-          </div> */}
       </nav>
     </header>
   );
