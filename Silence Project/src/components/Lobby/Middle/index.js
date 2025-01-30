@@ -12,7 +12,14 @@ import glassesSkin04 from '../../../../public/images/characters_skins/glasess/gl
 import floorLobbyCharacter01 from '../../../../public/images/characters/floor_character_01.png';
 import Image from 'next/image';
 
-function MiddleLobby({ actions, permissions, configuration }) {
+function MiddleLobby({
+  actions,
+  permissions,
+  configuration,
+  socket,
+  friends,
+  lobby,
+}) {
   const {
     setOpenServerFind,
     setOpenCreateMatch,
@@ -27,6 +34,26 @@ function MiddleLobby({ actions, permissions, configuration }) {
   const [isRotatingLeft, setIsRotatingLeft] = useState(false);
   const [isRotatingRight, setIsRotatingRight] = useState(false);
   const characterRef = useRef(null);
+
+  const [playerName, setPlayerName] = useState('');
+  const [randomFriend, setRandomFriend] = useState(null);
+
+  const joinLobby = () => {
+    socket.emit('join_lobby', { lobbyId, player: playerName });
+  };
+
+  const invitePlayer = (playerId) => {
+    socket.emit('invite_player', {
+      lobbyId: lobby.roomID,
+      invitedPlayerId: playerId,
+    });
+  };
+
+  const acceptInvite = () => {
+    if (invite) {
+      socket.emit('accept_invite', { lobbyId: invite, player: playerName });
+    }
+  };
 
   const [character, setCharacter] = useState({
     name: 'Flintovsk',
@@ -46,6 +73,13 @@ function MiddleLobby({ actions, permissions, configuration }) {
       boots: null,
     },
   });
+
+  useEffect(() => {
+    if (friends.length > 0) {
+      const randomIndex = Math.floor(Math.random() * friends.length);
+      setRandomFriend(friends[randomIndex]);
+    }
+  }, [friends]);
 
   useEffect(() => {
     let animationFrameId;
@@ -185,33 +219,45 @@ function MiddleLobby({ actions, permissions, configuration }) {
         </ul>
       </div>
       <section className="flex w-full justify-center">
-        <div className="group relative mt-24 flex h-full w-full max-w-[350px] scale-75 select-none items-end justify-center">
-          <div className="absolute left-1/2 top-1/2 z-10 flex w-44 -translate-x-1/2 -translate-y-12 flex-col items-center justify-center rounded-2xl border border-gray-600/60 bg-white/30 p-4 shadow-md">
-            <p className="font-KanitBold text-2xl text-black/80">Fortrek</p>
-            <p className="font-KanitBold text-lg text-amber-300">ESTÁ ONLINE</p>
-            <span className="mt-2 block w-full cursor-pointer rounded-xl border-2 border-amber-500 bg-amber-400 px-3 py-4 text-center font-KanitBold text-xl leading-3 text-black shadow-md hover:opacity-80">
-              CONVIDAR
-            </span>
-            <div className="absolute -bottom-2 flex justify-center">
-              <div className="h-0 w-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white/30 shadow-md"></div>
+        {randomFriend && (
+          <div className="group relative mt-24 flex h-full w-full max-w-[350px] scale-75 select-none items-end justify-center">
+            <div className="absolute left-1/2 top-1/2 z-10 flex w-44 -translate-x-1/2 -translate-y-12 flex-col items-center justify-center rounded-2xl border border-gray-600/60 bg-white/30 p-4 shadow-md">
+              <p className="font-KanitBold text-2xl text-black/80">
+                {randomFriend.id}
+              </p>
+              <p className="font-KanitBold text-lg text-amber-300">
+                ESTÁ ONLINE
+              </p>
+              <span
+                onClick={() => invitePlayer(randomFriend.id)}
+                className="mt-2 block w-full cursor-pointer rounded-xl border-2 border-amber-500 bg-amber-400 px-3 py-4 text-center font-KanitBold text-xl leading-3 text-black shadow-md hover:opacity-80">
+                CONVIDAR
+              </span>
+              <div className="absolute -bottom-2 flex justify-center">
+                <div className="h-0 w-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white/30 shadow-md"></div>
+              </div>
+            </div>
+            <div className="absolute top-0 h-full w-[80%] bg-gradient-to-b from-cyan-500/70 via-cyan-500/70 to-cyan-500/20 opacity-0 blur-xl transition-all group-hover:opacity-80"></div>
+            <div className="absolute -bottom-[90px] left-0 -z-10 overflow-hidden">
+              <Image
+                src={floorLobbyCharacter01}
+                title="Character Test"
+                alt="Character Test"
+                className="block h-auto w-fit select-none !object-contain "
+              />
             </div>
           </div>
-          <div className="absolute top-0 h-full w-[80%] bg-gradient-to-b from-cyan-500/70 via-cyan-500/70 to-cyan-500/20 opacity-0 blur-xl transition-all group-hover:opacity-80"></div>
-          <div className="absolute -bottom-[90px] left-0 -z-10 overflow-hidden">
-            <Image
-              src={floorLobbyCharacter01}
-              title="Character Test"
-              alt="Character Test"
-              className="block h-auto w-fit select-none !object-contain "
-            />
-          </div>
-        </div>
+        )}
         <MainCharacter configuration={configuration} character={character} />
         <div className="group relative mt-24 flex h-full w-full max-w-[350px] scale-75 select-none items-end justify-center">
           <div className="absolute left-1/2 top-1/2 z-10 flex w-44 -translate-x-1/2 -translate-y-12 flex-col items-center justify-center rounded-2xl border border-gray-600/60 bg-white/30 p-4 shadow-md">
-            <p className="font-KanitBold text-2xl text-black/80">5Disaster</p>
+            <p className="font-KanitBold text-2xl text-black/80">
+              {friends[2] && friends[2].id}
+            </p>
             <p className="font-KanitBold text-lg text-amber-300">ESTÁ ONLINE</p>
-            <span className="mt-2 block w-full cursor-pointer rounded-xl border-2 border-amber-500 bg-amber-400 px-3 py-4 text-center font-KanitBold text-xl leading-3 text-black shadow-md hover:opacity-80">
+            <span
+              onClick={() => invitePlayer(friends[2].id)}
+              className="mt-2 block w-full cursor-pointer rounded-xl border-2 border-amber-500 bg-amber-400 px-3 py-4 text-center font-KanitBold text-xl leading-3 text-black shadow-md hover:opacity-80">
               CONVIDAR
             </span>
             <div className="absolute -bottom-2 flex justify-center">

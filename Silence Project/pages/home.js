@@ -52,6 +52,10 @@ export default function HomePage() {
   const { socket, setSocket } = useSocket();
   const { messages, setMessages } = useMessage();
 
+  const [lobby, setLobby] = useState([]);
+  const [invite, setInvite] = useState(null);
+  const [friends, setFriends] = useState([]);
+
   const socketInitializer = async () => {
     var sk = socket;
 
@@ -64,6 +68,8 @@ export default function HomePage() {
 
       sk.on('connect', () => {
         setLoading(false);
+
+        sk.emit('join_pre_room');
       });
     }
 
@@ -91,11 +97,30 @@ export default function HomePage() {
     sk.on('room_users', roomUsersHandler);
     sk.on('room_users_teste', roomUsersTesteHandler);
     sk.on('received_message', receivedMessageHandler);
+    sk.on('update_lobby', (players) => {
+      setLobby(players);
+    });
+    sk.emit('request_users');
 
-    // To remove listeners when they are no longer needed
-    sk.off('room_users', roomUsersHandler);
-    sk.off('room_users_teste', roomUsersTesteHandler);
-    sk.off('received_message', receivedMessageHandler);
+    sk.on('result_friends', (data) => {
+      setFriends(data);
+    });
+
+    sk.on('receive_invite', ({ lobbyId, idHOST }) => {
+      setInvite({ lobbyId, idHOST });
+    });
+
+    return () => {
+      // To remove listeners when they are no longer needed
+      sk.off('result_friends', () => {
+        setFriends([]);
+      });
+      sk.off('room_users', roomUsersHandler);
+      sk.off('room_users_teste', roomUsersTesteHandler);
+      sk.off('received_message', receivedMessageHandler);
+      sk.off('update_lobby');
+      sk.off('receive_invite');
+    };
   };
 
   useEffect(() => {
@@ -112,6 +137,7 @@ export default function HomePage() {
         <title>SL | Home Page</title>
       </Head>
       <MenuLobby setBgLobby={setBgLobby} soundAllowed={soundAllowed} />
+      <div className="absolute z-40 bg-red-500">{JSON.stringify(lobby)}</div>
       <MiddleLobby
         actions={{
           setOpenServerFind,
@@ -121,8 +147,12 @@ export default function HomePage() {
         }}
         permissions={{ soundAllowed }}
         configuration={configuration}
+        socket={socket}
+        friends={friends}
+        lobby={lobby}
       />
       <>
+        {console.log(invite)}
         {openServerFind && (
           <ListServer
             actions={{ setOpenServerFind }}

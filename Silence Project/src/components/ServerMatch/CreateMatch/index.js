@@ -40,6 +40,7 @@ function LobbyCreateMatch({ actions, soundAllowed, roomsList }) {
       setUsersRoom(data.users);
       console.log(data.users);
     });
+
     socket.on('insufficient_players', () => {
       console.log('insufficient_players');
     });
