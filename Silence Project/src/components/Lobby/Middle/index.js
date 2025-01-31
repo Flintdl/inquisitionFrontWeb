@@ -219,8 +219,8 @@ function MiddleLobby({
         </ul>
       </div>
       <section className="flex w-full justify-center">
-        {randomFriend && (
-          <div className="group relative mt-24 flex h-full w-full max-w-[350px] scale-75 select-none items-end justify-center">
+        <div className="group relative mt-24 flex h-full w-full max-w-[350px] scale-75 select-none items-end justify-center">
+          {randomFriend && (
             <div className="absolute left-1/2 top-1/2 z-10 flex w-44 -translate-x-1/2 -translate-y-12 flex-col items-center justify-center rounded-2xl border border-gray-600/60 bg-white/30 p-4 shadow-md">
               <p className="font-KanitBold text-2xl text-black/80">
                 {randomFriend.id}
@@ -237,23 +237,22 @@ function MiddleLobby({
                 <div className="h-0 w-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white/30 shadow-md"></div>
               </div>
             </div>
-            <div className="absolute top-0 h-full w-[80%] bg-gradient-to-b from-cyan-500/70 via-cyan-500/70 to-cyan-500/20 opacity-0 blur-xl transition-all group-hover:opacity-80"></div>
-            <div className="absolute -bottom-[90px] left-0 -z-10 overflow-hidden">
-              <Image
-                src={floorLobbyCharacter01}
-                title="Character Test"
-                alt="Character Test"
-                className="block h-auto w-fit select-none !object-contain "
-              />
-            </div>
+          )}
+          <div className="absolute top-0 h-full w-[80%] bg-gradient-to-b from-cyan-500/70 via-cyan-500/70 to-cyan-500/20 opacity-0 blur-xl transition-all group-hover:opacity-80"></div>
+          <div className="absolute -bottom-[90px] left-0 -z-10 overflow-hidden">
+            <Image
+              src={floorLobbyCharacter01}
+              title="Character Test"
+              alt="Character Test"
+              className="block h-auto w-fit select-none !object-contain "
+            />
           </div>
-        )}
+        </div>
+
         <MainCharacter configuration={configuration} character={character} />
         <div className="group relative mt-24 flex h-full w-full max-w-[350px] scale-75 select-none items-end justify-center">
           <div className="absolute left-1/2 top-1/2 z-10 flex w-44 -translate-x-1/2 -translate-y-12 flex-col items-center justify-center rounded-2xl border border-gray-600/60 bg-white/30 p-4 shadow-md">
-            <p className="font-KanitBold text-2xl text-black/80">
-              {friends[2] && friends[2].id}
-            </p>
+            <p className="font-KanitBold text-2xl text-black/80">Fortrek</p>
             <p className="font-KanitBold text-lg text-amber-300">ESTÁ ONLINE</p>
             <span
               onClick={() => invitePlayer(friends[2].id)}
